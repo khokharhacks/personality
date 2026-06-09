@@ -3,246 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Career Archetype & Personality Assessment</title>
-    <!-- Tailwind CSS for styling -->
+    <title>AI Brutal Style Critic & Fashion Rater</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+<body class="bg-rose-50 text-slate-800 font-sans min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-indigo-700 text-white shadow-md py-4 px-6">
+    <header class="bg-rose-600 text-white shadow-md py-5 px-6 border-b-4 border-rose-700">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tight">🧬 AI Career Mindset Coach</h1>
-            <span class="text-xs bg-indigo-800 px-3 py-1 rounded-full text-indigo-100">Gemini 2.5 Engine</span>
+            <h1 class="text-2xl font-black tracking-tight">🕶️ AI Style Critic: Brutal Outfit Rater</h1>
+            <span class="text-xs bg-rose-800 px-3 py-1 rounded-full text-rose-100 font-bold uppercase tracking-wide">Gemini 2.5 Vision Engine</span>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto p-6 my-6">
+    <main class="max-w-4xl mx-auto p-6 my-4">
         
-        <!-- STEP 1: API Configuration Setup -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-6">
-            <h2 class="text-lg font-semibold mb-1 text-slate-900">1. Setup Secure Access Key</h2>
-            <p class="text-sm text-slate-500 mb-4">Your Gemini key stays directly inside your local browser storage and is never uploaded anywhere else.</p>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-rose-100 mb-6">
+            <h2 class="text-lg font-bold mb-1 text-slate-900">1. Link Your Secure Access Key</h2>
+            <p class="text-xs text-slate-500 mb-3">Your API key processes image pixels locally in your browser workspace. It never logs onto external servers.</p>
             <div class="flex gap-3">
                 <input type="password" id="apiKey" placeholder="Paste your Gemini API Key here..." 
-                       class="flex-1 border border-slate-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <button onclick="saveKey()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded font-medium transition shadow-sm">
+                       class="flex-1 border border-slate-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                <button onclick="saveKey()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded font-semibold transition text-sm shadow-sm">
                     Save Key
                 </button>
             </div>
             <p id="keyStatus" class="text-xs mt-2 text-slate-500 italic"></p>
         </div>
 
-        <!-- STEP 2: The Interview Questions Form -->
-        <div id="assessmentForm" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-6 space-y-6">
-            <h2 class="text-lg font-semibold text-slate-900 border-b pb-2">2. Dynamic Mindset Interview</h2>
-            <p class="text-sm text-slate-600 italic">Please answer these 4 situational questions naturally in your own words. Sentence length helps our AI parse your natural communication style!</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             
-            <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-900">Question 1: The Problem Solving Trap</label>
-                <p class="text-xs text-slate-500 mb-2">Imagine you are deep in a vital project, and your primary technical solution or tool completely breaks down under a deadline. What are your immediate practical steps?</p>
-                <textarea id="q1" rows="3" placeholder="I usually tend to..." class="w-full border border-slate-300 p-3 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 mb-3">2. Capture Your Attire</h2>
+                    
+                    <div class="relative bg-slate-900 rounded-lg overflow-hidden aspect-[4/3] flex items-center justify-center mb-4 border border-slate-700 shadow-inner">
+                        <video id="videoFeed" autoplay playsinline class="w-full h-full object-cover"></video>
+                        <canvas id="photoCanvas" class="hidden"></canvas>
+                        <img id="capturedImage" class="hidden w-full h-full object-cover absolute inset-0 z-10" />
+                        <div id="cameraFallbackMsg" class="absolute hidden text-center text-slate-400 p-4 text-xs">Camera stream inactive. Grant permissions or utilize direct file upload below.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Alternative: Upload Photo File</label>
+                        <input type="file" id="fileUpload" accept="image/*" onchange="handleFileSelect(event)" class="w-full text-xs text-slate-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100" />
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="initiateCamera()" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold py-2 rounded transition">🎛️ Reset Cam</button>
+                    <button onclick="captureSnapshot()" class="flex-1 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold py-2 rounded transition shadow-sm">📸 Capture Snapshot</button>
+                </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-900">Question 2: Collaborative Dynamics</label>
-                <p class="text-xs text-slate-500 mb-2">Do you feel re-energized by intense brainstorming debates inside group collaborative spaces, or do you prefer to conceptualize plans independently in a quiet room before sharing?</p>
-                <textarea id="q2" rows="3" placeholder="Personally, I thrive more when..." class="w-full border border-slate-300 p-3 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900">3. Setting the Venue Context</h2>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Target Event Destination</label>
+                        <select id="eventSelect" class="w-full border border-slate-300 p-2 rounded text-sm bg-white focus:ring-2 focus:ring-rose-500">
+                            <option value="Traditional Wedding Ceremony">Traditional Wedding Ceremony</option>
+                            <option value="Casual Weekend Brunch">Casual Weekend Brunch</option>
+                            <option value="High-Stakes Tech Job Interview">High-Stakes Tech Job Interview</option>
+                            <option value="Trendy Elite Nightclub / Lounge">Trendy Elite Nightclub / Lounge</option>
+                            <option value="Formal Corporate Gala Dinner">Formal Corporate Gala Dinner</option>
+                            <option value="Relaxed Outdoor Music Festival">Relaxed Outdoor Music Festival</option>
+                            <option value="First Date at a Fine Dining Restaurant">First Date at a Fine Dining Restaurant</option>
+                            <option value="Gym Workout Training Session">Gym Workout Training Session</option>
+                        </select>
+                    </div>
 
-            <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-900">Question 3: Ambiguity vs. Structure</label>
-                <p class="text-xs text-slate-500 mb-2">If given a wide-open project with absolutely zero rules, blueprints, or instructions, do you feel inspired by the creative chaos or frustrated by the lack of clear expectations?</p>
-                <textarea id="q3" rows="3" placeholder="My natural approach is to..." class="w-full border border-slate-300 p-3 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-            </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Cultural Representation Background</label>
+                        <select id="ethnicitySelect" class="w-full border border-slate-300 p-2 rounded text-sm bg-white focus:ring-2 focus:ring-rose-500">
+                            <option value="American">American</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Pakistani">Pakistani</option>
+                            <option value="Bangladeshi">Bangladeshi</option>
+                            <option value="Nigerian">Nigerian</option>
+                            <option value="British">British</option>
+                            <option value="Mexican">Mexican</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="Korean">Korean</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="Italian">Italian</option>
+                            <option value="French">French</option>
+                            <option value="Brazilian">Brazilian</option>
+                            <option value="Egyptian">Egyptian</option>
+                            <option value="Ethiopian">Ethiopian</option>
+                            <option value="Colombian">Colombian</option>
+                            <option value="Filipino">Filipino</option>
+                            <option value="German">German</option>
+                            <option value="Canadian">Canadian</option>
+                            <option value="Australian">Australian</option>
+                            <option value="South African">South African</option>
+                        </select>
+                    </div>
+                </div>
 
-            <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-900">Question 4: True Core Motivation</label>
-                <p class="text-xs text-slate-500 mb-2">At the conclusion of a difficult working year, what reward makes you proudest: Public organizational recognition, mastering a complex skill, or seeing your work tangibly help others?</p>
-                <textarea id="q4" rows="3" placeholder="What motivates me most is..." class="w-full border border-slate-300 p-3 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                <button onclick="executeStyleRoast()" id="roastBtn" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-3 px-4 rounded-lg transition shadow-md text-base tracking-wide mt-6">
+                    🔥 Unleash Brutal Outfit Assessment
+                </button>
             </div>
-
-            <button onclick="calculatePersonality()" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition shadow-md">
-                📊 Submit Responses & Generate Personality Map
-            </button>
         </div>
 
-        <!-- Loading Screen -->
-        <div id="loadingState" class="hidden text-center py-12 bg-white rounded-xl border border-slate-200 shadow-sm">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-            <p class="text-slate-700 font-medium">Gemini AI is parsing psychological patterns and calculating optimal job pathways...</p>
+        <div id="loadingState" class="hidden text-center py-12 bg-white rounded-xl border border-rose-100 shadow-sm">
+            <div class="animate-bounce rounded-full h-10 w-10 bg-rose-600 mx-auto mb-4"></div>
+            <p class="text-slate-700 font-bold tracking-tight">AI Fashion Director is judging your choices...</p>
+            <p class="text-xs text-slate-400 mt-1">Analyzing fit ratios, silhouettes, and cultural coordination metrics.</p>
         </div>
 
-        <!-- STEP 3: Assessment Dashboard Displays Here -->
         <div id="dashboardResults" class="hidden space-y-6">
             
-            <!-- Core Archetype Badge & Overview -->
-            <div class="bg-indigo-900 text-white p-6 rounded-xl shadow-md">
-                <span class="text-xs bg-indigo-700 px-3 py-1 rounded-full uppercase tracking-wider font-semibold">Your AI Career Archetype</span>
-                <h3 id="archetypeTitle" class="text-2xl font-black mt-1 mb-2 text-indigo-100"></h3>
-                <p id="archetypeSummary" class="text-sm text-indigo-200 leading-relaxed"></p>
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-md text-center border-b-8 border-rose-600">
+                <span class="text-xs text-rose-400 font-extrabold uppercase tracking-widest">Calculated Fashion Compatibility Rating</span>
+                <div id="scoreMetric" class="text-6xl font-black my-2 text-white"></div>
+                <h3 id="verdictHeader" class="text-xl font-bold text-rose-100 tracking-tight"></h3>
             </div>
 
-            <!-- Strengths and Weaknesses Comparison Boxes -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-xl shadow-sm">
+                <h4 class="font-extrabold text-amber-900 mb-1 flex items-center gap-2">🌶️ The Brutally Honest Critique</h4>
+                <p id="critiqueParagraph" class="text-sm text-amber-800 leading-relaxed italic"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-emerald-900 mb-2 flex items-center gap-2">💪 Key Foundational Strengths</h4>
-                    <p id="userStrengths" class="text-sm text-emerald-800 whitespace-pre-line leading-relaxed"></p>
+                    <h4 class="font-bold text-emerald-900 mb-2">✅ What Actually Works (Keep These)</h4>
+                    <p id="stylePros" class="text-sm text-emerald-800 whitespace-pre-line leading-relaxed"></p>
                 </div>
-                <div class="bg-amber-50 border border-amber-200 p-5 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-amber-900 mb-2 flex items-center gap-2">⚠️ Natural Gaps & Weaknesses</h4>
-                    <p id="userWeaknesses" class="text-sm text-amber-800 whitespace-pre-line leading-relaxed"></p>
-                </div>
-            </div>
-
-            <!-- Target Fit Careers Recommendations -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-4 bg-slate-100 border-b border-slate-200">
-                    <h3 class="font-bold text-slate-900">Highest Compatibility Professional Ecosystems</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-xs font-semibold text-slate-600 border-b border-slate-200 uppercase">
-                                <th class="p-4">Target Domain</th>
-                                <th class="p-4">Why You Fit Perfectly</th>
-                                <th class="p-4">Ideal Operational Environment</th>
-                            </tr>
-                        </thead>
-                        <tbody id="careerTableBody" class="text-sm divide-y divide-slate-100">
-                            <!-- Dynamic elements injected here -->
-                        </tbody>
-                    </table>
+                <div class="bg-red-50 border border-red-200 p-5 rounded-xl shadow-sm">
+                    <h4 class="font-bold text-red-900 mb-2">🚨 Style Calamities (Change Instantly)</h4>
+                    <p id="styleCons" class="text-sm text-red-800 whitespace-pre-line leading-relaxed"></p>
                 </div>
             </div>
 
-            <!-- Reset Button to let user try again -->
-            <button onclick="resetTest()" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 underline transition block text-center mx-auto">
-                ← Retake Mindset Assessment
-            </button>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+                <p class="text-xs font-bold text-slate-500 mb-2 uppercase">Brag To Your Social Network</p>
+                <button onclick="copyShareText()" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs py-2 px-4 rounded transition shadow-sm mx-auto">
+                    📋 Copy My Brutal Fashion Rating URL Text
+                </button>
+            </div>
         </div>
     </main>
 
-    <!-- Operational Engine Code -->
     <script>
-        // Auto-loads API keys if previously keyed into memory
+        let liveStreamInstance = null;
+        let activeBase64Image = null;
+
         document.addEventListener('DOMContentLoaded', () => {
             const storedKey = localStorage.getItem('gemini_api_key');
             if (storedKey) {
                 document.getElementById('apiKey').value = storedKey;
-                document.getElementById('keyStatus').innerText = "✅ Secure key recovered from browser memory.";
+                document.getElementById('keyStatus').innerText = "✅ Key automatically recovered from browser storage.";
             }
+            initiateCamera();
         });
 
         function saveKey() {
             const key = document.getElementById('apiKey').value.trim();
             if(key) {
                 localStorage.setItem('gemini_api_key', key);
-                document.getElementById('keyStatus').innerText = "✅ Key stored successfully inside browser memory.";
-                alert("Key saved successfully!");
+                document.getElementById('keyStatus').innerText = "✅ Key successfully stored.";
+                alert("API Key saved locally inside browser cache!");
             }
         }
 
-        function resetTest() {
-            document.getElementById('dashboardResults').classList.add('hidden');
-            document.getElementById('assessmentForm').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        async function initiateCamera() {
+            document.getElementById('capturedImage').classList.add('hidden');
+            const video = document.getElementById('videoFeed');
+            video.classList.remove('hidden');
+
+            if(liveStreamInstance) {
+                liveStreamInstance.getTracks().forEach(track => track.stop());
+            }
+
+            try {
+                liveStreamInstance = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                video.srcObject = liveStreamInstance;
+                document.getElementById('cameraFallbackMsg').classList.add('hidden');
+            } catch (err) {
+                console.error("Camera access blocked: ", err);
+                document.getElementById('cameraFallbackMsg').classList.remove('hidden');
+            }
         }
 
-        async function calculatePersonality() {
+        function captureSnapshot() {
+            const video = document.getElementById('videoFeed');
+            const canvas = document.getElementById('photoCanvas');
+            const img = document.getElementById('capturedImage');
+
+            if (!liveStreamInstance || video.paused) return;
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const rawBase64 = canvas.toDataURL('image/jpeg');
+            activeBase64Image = rawBase64.split(',')[1]; 
+
+            img.src = rawBase64;
+            img.classList.remove('hidden');
+            video.classList.add('hidden');
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('capturedImage');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                document.getElementById('videoFeed').classList.add('hidden');
+                
+                activeBase64Image = e.target.result.split(',')[1];
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function executeStyleRoast() {
             const key = localStorage.getItem('gemini_api_key') || document.getElementById('apiKey').value.trim();
-            const q1 = document.getElementById('q1').value.trim();
-            const q2 = document.getElementById('q2').value.trim();
-            const q3 = document.getElementById('q3').value.trim();
-            const q4 = document.getElementById('q4').value.trim();
+            const venue = document.getElementById('eventSelect').value;
+            const culture = document.getElementById('ethnicitySelect').value;
 
-            if(!key) { alert("Please input and save your Gemini API key first."); return; }
-            if(!q1 || !q2 || !q3 || !q4) { alert("Please provide answers to all assessment questions so our engine can generate an accurate map."); return; }
+            if(!key) { alert("Input and save a Gemini API Key to run style parsing rules."); return; }
+            if(!activeBase64Image) { alert("Take an outfit snapshot or select a photo file first."); return; }
 
-            // UI Transitions
-            document.getElementById('assessmentForm').classList.add('hidden');
             document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('dashboardResults').classList.add('hidden');
 
-            const assessmentPrompt = `
-                You are an elite corporate industrial psychologist and talent development supervisor. Read the user's open-ended answers to these behavioral interview questions:
+            const promptInstruction = `
+                You are a notoriously critical, elite fashion house creative director and celebrity stylist. Analyze this user photo outfit.
                 
-                [Problem Solving approach]: "${q1}"
-                [Social/Group preference]: "${q2}"
-                [Structure/Ambiguity tolerance]: "${q3}"
-                [Core Career Value driver]: "${q4}"
+                Contextual Constraints:
+                - Target Venue Event: ${venue}
+                - User Cultural Representation: ${culture}
 
-                Analyze these responses to decode their psychological traits, core communication strengths, operational blindspots, and career alignments.
-                
-                Your Task: Return a raw valid JSON object. Do not wrap it in markdown block fences or include the word "json". Output ONLY valid JSON structure matching this exact layout schema:
+                Task: Provide a completely unfiltered, brutally honest, sarcastic yet highly expert evaluation of their attire choices for this event. Do not mince words. Calculate a definitive score out of 100 based strictly on garment fitting parameters, color coordination rules, seasonal appropriateness, silhouettes, and cultural design relevance.
+
+                Return a raw valid JSON object. Do not frame it inside any markdown backticks (\`\`\`) or include the text marker "json". Output ONLY valid JSON using this blueprint:
                 {
-                   "archetype": "Give them a unique creative name like 'The Resilient Systems Innovator' or 'The Empathetic Strategist'",
-                   "summary": "A 3-sentence deep paragraph reviewing what type of worker they are and how their mind handles workplace challenges.",
-                   "strengths": "• Strength point 1\\n• Strength point 2\\n• Strength point 3",
-                   "weaknesses": "• Blindspot/Weakness point 1\\n• Blindspot/Weakness point 2\\n• Blindspot/Weakness point 3",
-                   "careers": [
-                      {
-                         "title": "Software Architect / Project Manager / Data Scientist etc.",
-                         "why": "Brief analysis linking their specific answers to this industry choice.",
-                         "culture": "What type of environment they need (e.g., Remote asynchronous, clear objectives, cross-functional teams)."
-                      },
-                      { "title": "Career 2 Title", "why": "Description", "culture": "Description" },
-                      { "title": "Career 3 Title", "why": "Description", "culture": "Description" }
-                   ]
+                   "score": 42,
+                   "verdict": "A snappy 4-word summary headline label describing their style status.",
+                   "critique": "A beautifully written, brutally honest paragraph roasting the outfit coordination errors relative to the destination event parameters.",
+                   "pros": "• Positive detail 1\\n• Positive detail 2",
+                   "cons": "• Negative issue 1\\n• Negative issue 2\\n• Critical improvement 3"
                 }
             `;
 
             try {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
                 
+                const requestPayload = {
+                    contents: [{
+                        parts: [
+                            { text: promptInstruction },
+                            { inlineData: { mimeType: "image/jpeg", data: activeBase64Image } }
+                        ]
+                    }]
+                };
+
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: assessmentPrompt }] }]
-                    })
+                    body: JSON.stringify(requestPayload)
                 });
 
                 const data = await response.json();
-                let cleanJsonString = data.candidates[0].content.parts[0].text.trim();
-                
-                // Clear out potential markdown code blocks safely
-                if(cleanJsonString.startsWith("```")) {
-                    cleanJsonString = cleanJsonString.replace(/^```json|```$/g, "").trim();
+                let textResult = data.candidates[0].content.parts[0].text.trim();
+
+                if(textResult.startsWith("```")) {
+                    textResult = textResult.replace(/^```json|```$/g, "").trim();
                 }
 
-                const result = JSON.parse(cleanJsonString);
+                const result = JSON.parse(textResult);
 
-                // Inject outputs safely back to our UI
-                document.getElementById('archetypeTitle').innerText = result.archetype;
-                document.getElementById('archetypeSummary').innerText = result.summary;
-                document.getElementById('userStrengths').innerText = result.strengths;
-                document.getElementById('userWeaknesses').innerText = result.weaknesses;
+                document.getElementById('scoreMetric').innerText = `${result.score}/100`;
+                document.getElementById('verdictHeader').innerText = result.verdict;
+                document.getElementById('critiqueParagraph').innerText = result.critique;
+                document.getElementById('stylePros').innerText = result.pros;
+                document.getElementById('styleCons').innerText = result.cons;
 
-                const tableBody = document.getElementById('careerTableBody');
-                tableBody.innerHTML = ""; // Clear out previous results
-
-                result.careers.forEach(job => {
-                    const row = document.createElement('tr');
-                    row.className = "hover:bg-slate-50 transition";
-                    row.innerHTML = `
-                        <td class="p-4 font-bold text-slate-900">${job.title}</td>
-                        <td class="p-4 text-slate-600 leading-relaxed">${job.why}</td>
-                        <td class="p-4 text-xs font-semibold text-indigo-700 bg-indigo-50/50 rounded">${job.culture}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-
-                // Smooth dashboard reveals
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('dashboardResults').classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                document.getElementById('dashboardResults').scrollIntoView({ behavior: 'smooth' });
 
             } catch (err) {
                 console.error(err);
-                alert("An error occurred during evaluation processing. Verify your API key is correct and try again.");
+                alert("The AI model failed to parse this image asset. Double-check your API key settings or choose a clearer upload photo.");
                 document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('assessmentForm').classList.remove('hidden');
             }
+        }
+
+        function copyShareText() {
+            const currentScore = document.getElementById('scoreMetric').innerText;
+            const contextVenue = document.getElementById('eventSelect').value;
+            const shareText = `An AI Stylist just gave my outfit a brutal ${currentScore} for a ${contextVenue}! Check your style standing for free here: ${window.location.href}`;
+            
+            navigator.clipboard.writeText(shareText);
+            alert("Viral share text copied to your clipboard! Ready to post on your socials.");
         }
     </script>
 </body>
