@@ -1,311 +1,626 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Brutal Style Critic & Fashion Rater</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGP Email Security — Ch.6 Exam Prep Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14181F;
+    --surface:#1C2330;
+    --surface-hi:#222A38;
+    --border:#2B3441;
+    --border-soft:#252D3A;
+    --text:#ECE8DF;
+    --text-dim:#8B93A3;
+    --text-faint:#5C6577;
+    --brass:#D7A847;
+    --brass-dim:#8A7140;
+    --teal:#5FB8B0;
+    --teal-dim:#3F7A75;
+    --green:#6FCF97;
+    --coral:#E2725B;
+    --radius:14px;
+    --radius-sm:9px;
+    --max:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, #1A2230 0%, transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+    padding:0 0 80px;
+  }
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 20px;}
+
+  /* ---------- Header ---------- */
+  header{padding:56px 0 32px; border-bottom:1px solid var(--border-soft);}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:18px; height:1px; background:var(--brass-dim);
+    display:inline-block;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(32px, 6vw, 46px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    margin:0 0 16px;
+    color:#fff;
+  }
+  h1 em{
+    font-style:italic;
+    font-weight:600;
+    color:var(--brass);
+  }
+  .dek{
+    color:var(--text-dim);
+    font-size:15.5px;
+    max-width:58ch;
+    margin:0;
+  }
+  .dek b{color:var(--text); font-weight:600;}
+
+  /* ---------- Legend ---------- */
+  .legend{
+    display:flex; flex-wrap:wrap; gap:18px;
+    margin-top:22px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--text-faint);
+  }
+  .legend span{display:flex; align-items:center; gap:7px;}
+  .dot{width:8px; height:8px; border-radius:50%; flex:none;}
+  .dot.brass{background:var(--brass);}
+  .dot.teal{background:var(--teal);}
+  .dot.gray{background:var(--text-faint);}
+
+  /* ---------- Sticky progress ---------- */
+  .progress-bar{
+    position:sticky; top:0; z-index:50;
+    background:rgba(20,24,31,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border-soft);
+    padding:12px 0;
+  }
+  .progress-inner{
+    max-width:var(--max); margin:0 auto; padding:0 20px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .progress-track{
+    flex:1; height:5px; background:var(--surface-hi);
+    border-radius:99px; overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--teal-dim), var(--brass));
+    transition:width 0.4s ease;
+    border-radius:99px;
+  }
+  .progress-stat{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--text-dim);
+    white-space:nowrap;
+  }
+  .progress-stat b{color:var(--text); font-weight:600;}
+  .progress-stat .ok{color:var(--green); font-weight:600;}
+
+  /* ---------- Scenario reference strip ---------- */
+  .ref-section{padding:36px 0 8px;}
+  .ref-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--text-dim); margin:0 0 16px;
+  }
+  .scenario-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;
+  }
+  .scenario-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px 16px;
+    position:relative;
+    overflow:hidden;
+  }
+  .scenario-card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:3px;
+  }
+  .scenario-card.sc1::before{background:var(--brass);}
+  .scenario-card.sc2::before{background:var(--teal);}
+  .scenario-card.sc3::before{background:linear-gradient(90deg, var(--brass), var(--teal));}
+  .scenario-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; color:var(--text-faint); letter-spacing:0.08em;
+  }
+  .scenario-name{
+    font-family:'Fraunces', serif;
+    font-weight:600; font-size:17px; color:var(--text);
+    margin:4px 0 10px;
+  }
+  .scenario-flow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.8px; color:var(--text-dim);
+    line-height:1.6;
+    margin:0 0 12px;
+    padding-bottom:12px;
+    border-bottom:1px dashed var(--border);
+  }
+  .scenario-services{font-size:12.5px; line-height:1.9;}
+  .yes{color:var(--green);}
+  .no{color:var(--text-faint); text-decoration:line-through; text-decoration-color:var(--border);}
+
+  /* ---------- Questions ---------- */
+  .q-section{padding-top:44px;}
+  .q-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 22px 20px;
+    margin-bottom:14px;
+  }
+  .q-head{
+    display:flex; align-items:baseline; gap:10px;
+    margin-bottom:10px;
+  }
+  .q-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600; font-size:13px;
+    color:var(--text-faint);
+    flex:none;
+  }
+  .q-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    padding:2px 8px; border-radius:99px;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+  }
+  .q-tag.brass{color:var(--brass); border-color:var(--brass-dim);}
+  .q-tag.teal{color:var(--teal); border-color:var(--teal-dim);}
+  .q-text{
+    font-size:16px; font-weight:500; color:var(--text);
+    margin:0 0 16px; line-height:1.45;
+  }
+  .options{display:grid; gap:9px;}
+  .opt{
+    display:flex; align-items:flex-start; gap:11px;
+    text-align:left;
+    background:var(--surface-hi);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:12px 14px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:14.5px;
+    color:var(--text);
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .opt:hover:not(:disabled){border-color:var(--text-faint); transform:translateY(-1px);}
+  .opt:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+  .opt:disabled{cursor:default;}
+  .opt-letter{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600; font-size:12.5px;
+    color:var(--text-faint);
+    border:1px solid var(--border);
+    border-radius:5px;
+    width:22px; height:22px;
+    display:flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+  .opt.correct{
+    background:rgba(111,207,151,0.10);
+    border-color:var(--green);
+  }
+  .opt.correct .opt-letter{color:var(--green); border-color:var(--green);}
+  .opt.incorrect{
+    background:rgba(226,114,91,0.10);
+    border-color:var(--coral);
+  }
+  .opt.incorrect .opt-letter{color:var(--coral); border-color:var(--coral);}
+  .opt.dim{opacity:0.55;}
+
+  .seal{
+    margin-left:auto; flex:none;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--green);
+    display:flex; align-items:center; justify-content:center;
+    color:#102018; font-size:12px; font-weight:700;
+    transform:scale(0);
+    animation:seal-in .35s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  .cross{
+    margin-left:auto; flex:none;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--coral);
+    display:flex; align-items:center; justify-content:center;
+    color:#2a0f0a; font-size:12px; font-weight:700;
+    transform:scale(0);
+    animation:seal-in .35s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @keyframes seal-in{to{transform:scale(1);}}
+  @media (prefers-reduced-motion: reduce){
+    .seal, .cross{animation:none; transform:scale(1);}
+    html{scroll-behavior:auto;}
+  }
+
+  .explain{
+    margin-top:14px; padding:13px 15px;
+    background:var(--bg);
+    border:1px solid var(--border-soft);
+    border-left:3px solid var(--brass);
+    border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+    font-size:13.5px; color:var(--text-dim);
+    line-height:1.55;
+    animation:fade-in .3s ease;
+  }
+  .explain b{color:var(--text); font-weight:600;}
+  @keyframes fade-in{from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- Footer / reset ---------- */
+  .footer{
+    text-align:center; padding-top:30px;
+  }
+  .reset-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px; letter-spacing:0.04em;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    padding:11px 22px;
+    border-radius:99px;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .reset-btn:hover{border-color:var(--brass); color:var(--brass);}
+  .reset-btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+
+  .final-banner{
+    display:none;
+    margin:18px 0 8px;
+    padding:18px 20px;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    background:linear-gradient(135deg, rgba(215,168,71,0.08), rgba(95,184,176,0.08));
+    text-align:center;
+  }
+  .final-banner.show{display:block; animation:fade-in .4s ease;}
+  .final-banner .score-big{
+    font-family:'Fraunces', serif; font-size:30px; font-weight:700; color:#fff;
+  }
+  .final-banner p{margin:6px 0 0; color:var(--text-dim); font-size:13.5px;}
+
+  @media (max-width:640px){
+    .scenario-grid{grid-template-columns:1fr;}
+    header{padding:40px 0 26px;}
+    .q-card{padding:18px 16px 16px;}
+  }
+</style>
 </head>
-<body class="bg-rose-50 text-slate-800 font-sans min-h-screen">
+<body>
 
-    <header class="bg-rose-600 text-white shadow-md py-5 px-6 border-b-4 border-rose-700">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black tracking-tight">🕶️ AI Style Critic: Brutal Outfit Rater</h1>
-            <span class="text-xs bg-rose-800 px-3 py-1 rounded-full text-rose-100 font-bold uppercase tracking-wide">Gemini 2.5 Vision Engine</span>
+<div class="progress-bar">
+  <div class="progress-inner">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-stat" id="progressStat"><b>0</b> of 20 answered · <span class="ok">0</span> correct</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">ITS-102 · Network Security · Chapter 6</p>
+    <h1>Email Security:<br><em>Pretty Good Privacy</em></h1>
+    <p class="dek">20 questions built from your Ch.6 notes on PGP, mapped to the <b>IT Specialist Network Security</b> exam objectives on encryption (public/private keys), non‑repudiation, and secure email communication. Tap an answer to check it — the correct option is always revealed.</p>
+    <div class="legend">
+      <span><span class="dot brass"></span> Signature &amp; private‑key concepts</span>
+      <span><span class="dot teal"></span> Confidentiality &amp; public‑key concepts</span>
+      <span><span class="dot gray"></span> Foundations, process &amp; algorithms</span>
+    </div>
+  </header>
+
+  <section class="ref-section">
+    <p class="ref-title">Quick reference — the three scenarios</p>
+    <div class="scenario-grid">
+      <div class="scenario-card sc1">
+        <div class="scenario-num">SCENARIO 1</div>
+        <div class="scenario-name">Sign only</div>
+        <div class="scenario-flow">Email → Hash (SHA‑1) → Sign with PRₐ → Compress</div>
+        <div class="scenario-services">
+          <div class="yes">✓ Authentication</div>
+          <div class="yes">✓ Non‑repudiation</div>
+          <div class="no">✗ Confidentiality</div>
         </div>
-    </header>
-
-    <main class="max-w-4xl mx-auto p-6 my-4">
-        
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-rose-100 mb-6">
-            <h2 class="text-lg font-bold mb-1 text-slate-900">1. Link Your Secure Access Key</h2>
-            <p class="text-xs text-slate-500 mb-3">Your API key processes image pixels locally in your browser workspace. It never logs onto external servers.</p>
-            <div class="flex gap-3">
-                <input type="password" id="apiKey" placeholder="Paste your Gemini API Key here..." 
-                       class="flex-1 border border-slate-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
-                <button onclick="saveKey()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded font-semibold transition text-sm shadow-sm">
-                    Save Key
-                </button>
-            </div>
-            <p id="keyStatus" class="text-xs mt-2 text-slate-500 italic"></p>
+      </div>
+      <div class="scenario-card sc2">
+        <div class="scenario-num">SCENARIO 2</div>
+        <div class="scenario-name">Encrypt only</div>
+        <div class="scenario-flow">Email → Compress → Encrypt w/ Kₛ → Encrypt Kₛ with PUᵦ</div>
+        <div class="scenario-services">
+          <div class="no">✗ Authentication</div>
+          <div class="no">✗ Non‑repudiation</div>
+          <div class="yes">✓ Confidentiality</div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-lg font-bold text-slate-900 mb-3">2. Capture Your Attire</h2>
-                    
-                    <div class="relative bg-slate-900 rounded-lg overflow-hidden aspect-[4/3] flex items-center justify-center mb-4 border border-slate-700 shadow-inner">
-                        <video id="videoFeed" autoplay playsinline class="w-full h-full object-cover"></video>
-                        <canvas id="photoCanvas" class="hidden"></canvas>
-                        <img id="capturedImage" class="hidden w-full h-full object-cover absolute inset-0 z-10" />
-                        <div id="cameraFallbackMsg" class="absolute hidden text-center text-slate-400 p-4 text-xs">Camera stream inactive. Grant permissions or utilize direct file upload below.</div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Alternative: Upload Photo File</label>
-                        <input type="file" id="fileUpload" accept="image/*" onchange="handleFileSelect(event)" class="w-full text-xs text-slate-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100" />
-                    </div>
-                </div>
-
-                <div class="flex gap-2">
-                    <button onclick="initiateCamera()" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold py-2 rounded transition">🎛️ Reset Cam</button>
-                    <button onclick="captureSnapshot()" class="flex-1 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold py-2 rounded transition shadow-sm">📸 Capture Snapshot</button>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                <div class="space-y-4">
-                    <h2 class="text-lg font-bold text-slate-900">3. Setting the Venue Context</h2>
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Target Event Destination</label>
-                        <select id="eventSelect" class="w-full border border-slate-300 p-2 rounded text-sm bg-white focus:ring-2 focus:ring-rose-500">
-                            <option value="Traditional Wedding Ceremony">Traditional Wedding Ceremony</option>
-                            <option value="Casual Weekend Brunch">Casual Weekend Brunch</option>
-                            <option value="High-Stakes Tech Job Interview">High-Stakes Tech Job Interview</option>
-                            <option value="Trendy Elite Nightclub / Lounge">Trendy Elite Nightclub / Lounge</option>
-                            <option value="Formal Corporate Gala Dinner">Formal Corporate Gala Dinner</option>
-                            <option value="Relaxed Outdoor Music Festival">Relaxed Outdoor Music Festival</option>
-                            <option value="First Date at a Fine Dining Restaurant">First Date at a Fine Dining Restaurant</option>
-                            <option value="Gym Workout Training Session">Gym Workout Training Session</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Cultural Representation Background</label>
-                        <select id="ethnicitySelect" class="w-full border border-slate-300 p-2 rounded text-sm bg-white focus:ring-2 focus:ring-rose-500">
-                            <option value="American">American</option>
-                            <option value="Indian">Indian</option>
-                            <option value="Pakistani">Pakistani</option>
-                            <option value="Bangladeshi">Bangladeshi</option>
-                            <option value="Nigerian">Nigerian</option>
-                            <option value="British">British</option>
-                            <option value="Mexican">Mexican</option>
-                            <option value="Japanese">Japanese</option>
-                            <option value="Korean">Korean</option>
-                            <option value="Chinese">Chinese</option>
-                            <option value="Italian">Italian</option>
-                            <option value="French">French</option>
-                            <option value="Brazilian">Brazilian</option>
-                            <option value="Egyptian">Egyptian</option>
-                            <option value="Ethiopian">Ethiopian</option>
-                            <option value="Colombian">Colombian</option>
-                            <option value="Filipino">Filipino</option>
-                            <option value="German">German</option>
-                            <option value="Canadian">Canadian</option>
-                            <option value="Australian">Australian</option>
-                            <option value="South African">South African</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button onclick="executeStyleRoast()" id="roastBtn" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-3 px-4 rounded-lg transition shadow-md text-base tracking-wide mt-6">
-                    🔥 Unleash Brutal Outfit Assessment
-                </button>
-            </div>
+      </div>
+      <div class="scenario-card sc3">
+        <div class="scenario-num">SCENARIO 3</div>
+        <div class="scenario-name">Sign + Encrypt</div>
+        <div class="scenario-flow">Sign (PRₐ) → attach → Compress → Encrypt w/ Kₛ → Encrypt Kₛ with PUᵦ</div>
+        <div class="scenario-services">
+          <div class="yes">✓ Authentication</div>
+          <div class="yes">✓ Non‑repudiation</div>
+          <div class="yes">✓ Confidentiality</div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div id="loadingState" class="hidden text-center py-12 bg-white rounded-xl border border-rose-100 shadow-sm">
-            <div class="animate-bounce rounded-full h-10 w-10 bg-rose-600 mx-auto mb-4"></div>
-            <p class="text-slate-700 font-bold tracking-tight">AI Fashion Director is judging your choices...</p>
-            <p class="text-xs text-slate-400 mt-1">Analyzing fit ratios, silhouettes, and cultural coordination metrics.</p>
-        </div>
+  <section class="q-section">
+    <div id="questions"></div>
+    <div class="final-banner" id="finalBanner">
+      <div class="score-big" id="finalScoreText">—</div>
+      <p>Review any explanation above by re‑answering after a reset, or move on to Chapter 7.</p>
+    </div>
+    <div class="footer">
+      <button class="reset-btn" id="resetBtn">↺ Reset quiz</button>
+    </div>
+  </section>
+</div>
 
-        <div id="dashboardResults" class="hidden space-y-6">
-            
-            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-md text-center border-b-8 border-rose-600">
-                <span class="text-xs text-rose-400 font-extrabold uppercase tracking-widest">Calculated Fashion Compatibility Rating</span>
-                <div id="scoreMetric" class="text-6xl font-black my-2 text-white"></div>
-                <h3 id="verdictHeader" class="text-xl font-bold text-rose-100 tracking-tight"></h3>
-            </div>
+<script>
+const QUESTIONS = [
+  {
+    tag:"FOUNDATIONS", color:"",
+    q:"What does “PGP” stand for?",
+    opts:["Public Gateway Protocol","Pretty Good Privacy","Private Group Permission","Protected General Process"],
+    correct:1,
+    exp:"<b>Pretty Good Privacy</b> is the secure framework for email that bundles authentication, confidentiality, compression, and email‑compatibility services together."
+  },
+  {
+    tag:"FOUNDATIONS", color:"",
+    q:"PGP was originally created by:",
+    opts:["Bruce Schneier","Whitfield Diffie","Phil Zimmermann","Ron Rivest"],
+    correct:2,
+    exp:"<b>Phil Zimmermann</b> released PGP in 1991. It later formed the basis of the open OpenPGP standard still used by tools like GnuPG today."
+  },
+  {
+    tag:"FOUNDATIONS", color:"",
+    q:"Why is PGP described as a “hybrid” cryptosystem?",
+    opts:["It runs on both hardware and software","It combines symmetric and asymmetric encryption","It works on both Windows and Mac","It supports both lossy and lossless compression"],
+    correct:1,
+    exp:"PGP pairs fast <b>symmetric</b> encryption (for the bulk message) with secure <b>asymmetric</b> key exchange (for the session key). This public‑key/private‑key combination is exactly what the Network Security exam's encryption objective tests."
+  },
+  {
+    tag:"PGP SERVICES", color:"",
+    q:"Which of the following is NOT one of PGP's core services?",
+    opts:["Authentication","Confidentiality","Compression","Network routing"],
+    correct:3,
+    exp:"PGP's services are authentication, confidentiality, compression, and email compatibility (plus segmentation for oversized messages). Routing is a network‑layer job — PGP never touches it."
+  },
+  {
+    tag:"DIGITAL SIGNATURE", color:"brass",
+    q:"In Scenario 1, which key does Sender A use to create the digital signature?",
+    opts:["A's public key (PUₐ)","A's private key (PRₐ)","B's public key (PUᵦ)","B's private key (PRᵦ)"],
+    correct:1,
+    exp:"The sender hashes the message, then encrypts that hash with <b>their own private key (PRₐ)</b>. Because only A holds PRₐ, only A could have produced this signature — that's the root of non‑repudiation."
+  },
+  {
+    tag:"DIGITAL SIGNATURE", color:"brass",
+    q:"When Receiver B verifies the signature, which key recovers the original hash value?",
+    opts:["B's private key (PRᵦ)","B's public key (PUᵦ)","A's public key (PUₐ)","A's private key (PRₐ)"],
+    correct:2,
+    exp:"Since A signed with PRₐ, only the matching <b>public key PUₐ</b> decrypts it correctly. B already has PUₐ openly — no secret needs to change hands just to verify."
+  },
+  {
+    tag:"DIGITAL SIGNATURE", color:"brass",
+    q:"What two services does Scenario 1 (sign‑only) provide, per your notes?",
+    opts:["Confidentiality and integrity","Authentication and non‑repudiation","Compression and confidentiality","Availability and authentication"],
+    correct:1,
+    exp:"Your notes label this exactly: <b>“Authentication + Non‑Repudiation — No Confidentiality.”</b> The message stays readable; only the signature is added."
+  },
+  {
+    tag:"NON-REPUDIATION", color:"brass",
+    q:"A vendor later denies sending a signed purchase order, but the buyer proves otherwise using the vendor's signature. This protection is called:",
+    opts:["Confidentiality","Non‑repudiation","Availability","Compression"],
+    correct:1,
+    exp:"<b>Non‑repudiation</b> means the sender can't credibly deny sending the message — only their private key could have produced a signature that verifies against their public key. This is one of the core security principles Certiport tests directly."
+  },
+  {
+    tag:"HASHING", color:"brass",
+    q:"What hash algorithm does PGP traditionally use before signing?",
+    opts:["MD5","SHA‑1","bcrypt","AES‑256"],
+    correct:1,
+    exp:"PGP produces a <b>160‑bit hash using SHA‑1</b>. That compact digest — not the whole email — is what gets encrypted to form the signature."
+  },
+  {
+    tag:"COMPRESSION", color:"",
+    q:"What compression algorithm does PGP use, and is it lossy or lossless?",
+    opts:["RAR — lossy","ZIP — lossless","JPEG — lossy","ZIP — lossy"],
+    correct:1,
+    exp:"PGP compresses with the <b>ZIP algorithm</b>, which is <b>lossless</b> — every bit of the original email is recoverable on decompression. Lossy compression would silently corrupt the message."
+  },
+  {
+    tag:"CONFIDENTIALITY", color:"teal",
+    q:"In Scenario 2, what actually encrypts the bulk email content?",
+    opts:["The receiver's public key, directly","The sender's private key","A random one‑time session key (Kₛ) with symmetric encryption","The SHA‑1 hash of the message"],
+    correct:2,
+    exp:"The email is compressed, then encrypted with a one‑time <b>session key (Kₛ)</b> using a fast symmetric cipher. Only that small key gets the slower asymmetric treatment next."
+  },
+  {
+    tag:"CONFIDENTIALITY", color:"teal",
+    q:"Which key encrypts the session key (Kₛ) before it's sent to the receiver?",
+    opts:["Sender's private key (PRₐ)","Sender's public key (PUₐ)","Receiver's public key (PUᵦ)","Receiver's private key (PRᵦ)"],
+    correct:2,
+    exp:"Kₛ is wrapped with the <b>receiver's public key (PUᵦ)</b>. Only B holds the matching private key (PRᵦ), so only B can ever recover Kₛ — and therefore only B can decrypt the message."
+  },
+  {
+    tag:"CONFIDENTIALITY", color:"teal",
+    q:"Why encrypt the message with a fast symmetric cipher instead of encrypting the whole email directly with RSA?",
+    opts:["Symmetric ciphers are more secure than RSA","RSA can't encrypt text, only numbers","Asymmetric encryption is too slow for large amounts of data","Symmetric keys don't need a receiver"],
+    correct:2,
+    exp:"Public‑key algorithms like RSA are <b>computationally expensive</b>. PGP uses RSA only to wrap the small session key, then a fast symmetric cipher for the actual message — the same hybrid pattern used in HTTPS/TLS."
+  },
+  {
+    tag:"CONFIDENTIALITY", color:"teal",
+    q:"On the receiving end of Scenario 2, what must B do FIRST?",
+    opts:["Decompress the message","Hash the message","Decrypt the session key using B's private key (PRᵦ)","Re‑encrypt the message"],
+    correct:2,
+    exp:"B must recover <b>Kₛ first</b> by decrypting it with PRᵦ. Only with Kₛ in hand can B symmetrically decrypt the message — then decompress to restore the original email."
+  },
+  {
+    tag:"COMBINED SCENARIO", color:"",
+    q:"In Scenario 3, what's the correct order of operations on the sending side?",
+    opts:["Encrypt → Sign → Compress","Sign → Compress → Encrypt","Compress → Encrypt → Sign","Encrypt → Compress → Sign"],
+    correct:1,
+    exp:"A signs first (hash + encrypt with PRₐ), attaches the signature, compresses the bundle, and <b>only then</b> symmetrically encrypts it. Order is a classic exam trap — memorize this sequence."
+  },
+  {
+    tag:"COMBINED SCENARIO", color:"",
+    q:"Why does PGP sign the message BEFORE compressing it?",
+    opts:["Compression can corrupt digital signatures","Signing needs more processing power, so it goes first","It lets you store/verify just the uncompressed message+signature, since ZIP output isn't identical across every implementation","Compression is optional, so signing first guarantees it happens"],
+    correct:2,
+    exp:"If you signed <i>after</i> compressing, you'd need to recompress identically every time you verify — but different PGP implementations can produce slightly different ZIP output. Signing the original message sidesteps that fragility."
+  },
+  {
+    tag:"COMBINED SCENARIO", color:"",
+    q:"Why does PGP compress the message BEFORE encrypting it?",
+    opts:["Encrypted data is already small enough","Compressing ciphertext is technically impossible","Compressed data has less redundancy, strengthening the encryption — and there's less data to send","Only plaintext can ever be compressed"],
+    correct:2,
+    exp:"Strong encryption benefits from removing patterns. Compressing first strips out <b>redundancy</b> an attacker could otherwise lean on, and shrinks the payload before the costlier encryption/transmission step."
+  },
+  {
+    tag:"EMAIL COMPATIBILITY", color:"",
+    q:"Your notes say PGP is “compatible with all email servers.” What mechanism lets encrypted binary PGP data travel through text‑only email systems?",
+    opts:["Radix‑64 (base64‑style) conversion","ZIP compression","The SHA‑1 hash function","The session key"],
+    correct:0,
+    exp:"Signed/encrypted output is binary, but many email systems only reliably carry ASCII text. <b>Radix‑64 conversion</b> maps that binary data into printable characters any email system can transport."
+  },
+  {
+    tag:"ALGORITHMS", color:"",
+    q:"Per your notes' summary, which pairing is used for the PGP digital SIGNATURE?",
+    opts:["AES or DES","DSS/SHA or RSA/SHA","ZIP or RAR","Radix‑64 or Base32"],
+    correct:1,
+    exp:"PGP signs using either <b>DSS/SHA or RSA/SHA</b> — a SHA hash combined with one of two possible public‑key signing algorithms."
+  },
+  {
+    tag:"ALGORITHMS", color:"",
+    q:"Your notes list AES for PGP confidentiality. What's the nuance worth knowing for the exam?",
+    opts:["AES has been PGP's only option since 1991","Classic PGP originally used CAST‑128, IDEA, or 3DES for message encryption; AES is what modern OpenPGP/GnuPG tools commonly use today","PGP never uses symmetric encryption at all","AES only encrypts the session key, never the message"],
+    correct:1,
+    exp:"Worth knowing both directions: older textbook descriptions of PGP list <b>CAST‑128/IDEA/3DES</b> as the original symmetric ciphers, while current OpenPGP‑based tools commonly default to <b>AES</b>. Either could appear depending on how a question is worded."
+  }
+];
 
-            <div class="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-xl shadow-sm">
-                <h4 class="font-extrabold text-amber-900 mb-1 flex items-center gap-2">🌶️ The Brutally Honest Critique</h4>
-                <p id="critiqueParagraph" class="text-sm text-amber-800 leading-relaxed italic"></p>
-            </div>
+let answered = new Array(QUESTIONS.length).fill(null);
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-emerald-900 mb-2">✅ What Actually Works (Keep These)</h4>
-                    <p id="stylePros" class="text-sm text-emerald-800 whitespace-pre-line leading-relaxed"></p>
-                </div>
-                <div class="bg-red-50 border border-red-200 p-5 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-red-900 mb-2">🚨 Style Calamities (Change Instantly)</h4>
-                    <p id="styleCons" class="text-sm text-red-800 whitespace-pre-line leading-relaxed"></p>
-                </div>
-            </div>
+function letter(i){ return ["A","B","C","D"][i]; }
 
-            <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
-                <p class="text-xs font-bold text-slate-500 mb-2 uppercase">Brag To Your Social Network</p>
-                <button onclick="copyShareText()" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs py-2 px-4 rounded transition shadow-sm mx-auto">
-                    📋 Copy My Brutal Fashion Rating URL Text
-                </button>
-            </div>
-        </div>
-    </main>
+function render(){
+  const container = document.getElementById('questions');
+  container.innerHTML = QUESTIONS.map((item, qi) => {
+    const tagClass = item.color ? `q-tag ${item.color}` : 'q-tag';
+    const optsHtml = item.opts.map((opt, oi) => {
+      return `<button class="opt" type="button" data-q="${qi}" data-o="${oi}">
+                <span class="opt-letter">${letter(oi)}</span>
+                <span>${opt}</span>
+              </button>`;
+    }).join('');
+    return `<article class="q-card" id="card-${qi}">
+      <div class="q-head">
+        <span class="q-num">Q${qi+1}</span>
+        <span class="${tagClass}">${item.tag}</span>
+      </div>
+      <p class="q-text">${item.q}</p>
+      <div class="options" id="opts-${qi}">${optsHtml}</div>
+      <div id="explain-${qi}"></div>
+    </article>`;
+  }).join('');
 
-    <script>
-        let liveStreamInstance = null;
-        let activeBase64Image = null;
+  container.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', onSelect);
+  });
+  updateProgress();
+}
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const storedKey = localStorage.getItem('gemini_api_key');
-            if (storedKey) {
-                document.getElementById('apiKey').value = storedKey;
-                document.getElementById('keyStatus').innerText = "✅ Key automatically recovered from browser storage.";
-            }
-            initiateCamera();
-        });
+function onSelect(e){
+  const btn = e.currentTarget;
+  const qi = parseInt(btn.dataset.q, 10);
+  const oi = parseInt(btn.dataset.o, 10);
+  if(answered[qi] !== null) return;
 
-        function saveKey() {
-            const key = document.getElementById('apiKey').value.trim();
-            if(key) {
-                localStorage.setItem('gemini_api_key', key);
-                document.getElementById('keyStatus').innerText = "✅ Key successfully stored.";
-                alert("API Key saved locally inside browser cache!");
-            }
-        }
+  answered[qi] = oi;
+  const item = QUESTIONS[qi];
+  const optButtons = document.querySelectorAll(`#opts-${qi} .opt`);
 
-        async function initiateCamera() {
-            document.getElementById('capturedImage').classList.add('hidden');
-            const video = document.getElementById('videoFeed');
-            video.classList.remove('hidden');
+  optButtons.forEach((b, bi) => {
+    b.disabled = true;
+    if(bi === item.correct){
+      b.classList.add('correct');
+      b.insertAdjacentHTML('beforeend', '<span class="seal">✓</span>');
+    } else if(bi === oi){
+      b.classList.add('incorrect');
+      b.insertAdjacentHTML('beforeend', '<span class="cross">✕</span>');
+    } else {
+      b.classList.add('dim');
+    }
+  });
 
-            if(liveStreamInstance) {
-                liveStreamInstance.getTracks().forEach(track => track.stop());
-            }
+  document.getElementById(`explain-${qi}`).innerHTML =
+    `<div class="explain">${item.exp}</div>`;
 
-            try {
-                liveStreamInstance = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-                video.srcObject = liveStreamInstance;
-                document.getElementById('cameraFallbackMsg').classList.add('hidden');
-            } catch (err) {
-                console.error("Camera access blocked: ", err);
-                document.getElementById('cameraFallbackMsg').classList.remove('hidden');
-            }
-        }
+  updateProgress();
+}
 
-        function captureSnapshot() {
-            const video = document.getElementById('videoFeed');
-            const canvas = document.getElementById('photoCanvas');
-            const img = document.getElementById('capturedImage');
+function updateProgress(){
+  const total = QUESTIONS.length;
+  const answeredCount = answered.filter(a => a !== null).length;
+  const correctCount = answered.reduce((acc, a, i) => acc + (a === QUESTIONS[i].correct ? 1 : 0), 0);
 
-            if (!liveStreamInstance || video.paused) return;
+  document.getElementById('progressFill').style.width = `${(answeredCount/total)*100}%`;
+  document.getElementById('progressStat').innerHTML =
+    `<b>${answeredCount}</b> of ${total} answered · <span class="ok">${correctCount}</span> correct`;
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const banner = document.getElementById('finalBanner');
+  if(answeredCount === total){
+    document.getElementById('finalScoreText').textContent = `${correctCount} / ${total} correct`;
+    banner.classList.add('show');
+  } else {
+    banner.classList.remove('show');
+  }
+}
 
-            const rawBase64 = canvas.toDataURL('image/jpeg');
-            activeBase64Image = rawBase64.split(',')[1]; 
+function resetQuiz(){
+  answered = new Array(QUESTIONS.length).fill(null);
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
 
-            img.src = rawBase64;
-            img.classList.remove('hidden');
-            video.classList.add('hidden');
-        }
+document.getElementById('resetBtn').addEventListener('click', resetQuiz);
 
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.getElementById('capturedImage');
-                img.src = e.target.result;
-                img.classList.remove('hidden');
-                document.getElementById('videoFeed').classList.add('hidden');
-                
-                activeBase64Image = e.target.result.split(',')[1];
-            };
-            reader.readAsDataURL(file);
-        }
-
-        async function executeStyleRoast() {
-            const key = localStorage.getItem('gemini_api_key') || document.getElementById('apiKey').value.trim();
-            const venue = document.getElementById('eventSelect').value;
-            const culture = document.getElementById('ethnicitySelect').value;
-
-            if(!key) { alert("Input and save a Gemini API Key to run style parsing rules."); return; }
-            if(!activeBase64Image) { alert("Take an outfit snapshot or select a photo file first."); return; }
-
-            document.getElementById('loadingState').classList.remove('hidden');
-            document.getElementById('dashboardResults').classList.add('hidden');
-
-            const promptInstruction = `
-                You are a notoriously critical, elite fashion house creative director and celebrity stylist. Analyze this user photo outfit.
-                
-                Contextual Constraints:
-                - Target Venue Event: ${venue}
-                - User Cultural Representation: ${culture}
-
-                Task: Provide a completely unfiltered, brutally honest, sarcastic yet highly expert evaluation of their attire choices for this event. Do not mince words. Calculate a definitive score out of 100 based strictly on garment fitting parameters, color coordination rules, seasonal appropriateness, silhouettes, and cultural design relevance.
-
-                Return a raw valid JSON object. Do not frame it inside any markdown backticks (\`\`\`) or include the text marker "json". Output ONLY valid JSON using this blueprint:
-                {
-                   "score": 42,
-                   "verdict": "A snappy 4-word summary headline label describing their style status.",
-                   "critique": "A beautifully written, brutally honest paragraph roasting the outfit coordination errors relative to the destination event parameters.",
-                   "pros": "• Positive detail 1\\n• Positive detail 2",
-                   "cons": "• Negative issue 1\\n• Negative issue 2\\n• Critical improvement 3"
-                }
-            `;
-
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-                
-                const requestPayload = {
-                    contents: [{
-                        parts: [
-                            { text: promptInstruction },
-                            { inlineData: { mimeType: "image/jpeg", data: activeBase64Image } }
-                        ]
-                    }]
-                };
-
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestPayload)
-                });
-
-                const data = await response.json();
-                let textResult = data.candidates[0].content.parts[0].text.trim();
-
-                if(textResult.startsWith("```")) {
-                    textResult = textResult.replace(/^```json|```$/g, "").trim();
-                }
-
-                const result = JSON.parse(textResult);
-
-                document.getElementById('scoreMetric').innerText = `${result.score}/100`;
-                document.getElementById('verdictHeader').innerText = result.verdict;
-                document.getElementById('critiqueParagraph').innerText = result.critique;
-                document.getElementById('stylePros').innerText = result.pros;
-                document.getElementById('styleCons').innerText = result.cons;
-
-                document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('dashboardResults').classList.remove('hidden');
-                
-                document.getElementById('dashboardResults').scrollIntoView({ behavior: 'smooth' });
-
-            } catch (err) {
-                console.error(err);
-                alert("The AI model failed to parse this image asset. Double-check your API key settings or choose a clearer upload photo.");
-                document.getElementById('loadingState').classList.add('hidden');
-            }
-        }
-
-        function copyShareText() {
-            const currentScore = document.getElementById('scoreMetric').innerText;
-            const contextVenue = document.getElementById('eventSelect').value;
-            const shareText = `An AI Stylist just gave my outfit a brutal ${currentScore} for a ${contextVenue}! Check your style standing for free here: ${window.location.href}`;
-            
-            navigator.clipboard.writeText(shareText);
-            alert("Viral share text copied to your clipboard! Ready to post on your socials.");
-        }
-    </script>
+render();
+</script>
 </body>
 </html>
