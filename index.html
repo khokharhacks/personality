@@ -1,1129 +1,875 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Network Security Study Guide · ITS-102</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #0d1321;
-    --surface: #141b2d;
-    --surface-raised: #1b2438;
-    --surface-hover: #212b43;
-    --border: #263349;
-    --border-soft: #1c2538;
-    --text: #e9edf5;
-    --text-muted: #8996b0;
-    --text-dim: #5b6683;
-
-    --d1: #ef5350; /* Defense in Depth - coral/red */
-    --d1-soft: rgba(239,83,80,0.12);
-    --d2: #8b93f0; /* OS Security - indigo */
-    --d2-soft: rgba(139,147,240,0.12);
-    --d3: #3ecf9e; /* Network Device Security - green/teal */
-    --d3-soft: rgba(62,207,158,0.12);
-    --d4: #f5b942; /* Secure Computing - amber */
-    --d4-soft: rgba(245,185,66,0.12);
-
-    --good: #3ecf9e;
-    --bad: #ef5350;
-    --warn: #f5b942;
-
-    --font-display: 'Space Grotesk', 'IBM Plex Sans', sans-serif;
-    --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
-    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
-
-    --sidebar-w: 292px;
-    --content-max: 800px;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-
-  *,*::before,*::after{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
-  body{
-    margin:0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
-  h1,h2,h3,h4{ font-family: var(--font-display); font-weight: 600; margin: 0; color: var(--text); }
-  p{ margin: 0 0 14px 0; }
-  a{ color: inherit; }
-  ul,ol{ padding-left: 1.2em; margin: 0 0 14px 0; }
-  li{ margin-bottom: 6px; }
-  code, .mono{ font-family: var(--font-mono); }
-  ::selection{ background: var(--d3); color: #06120e; }
-
-  /* focus visibility */
-  a:focus-visible, button:focus-visible, summary:focus-visible{
-    outline: 2px solid var(--d3);
-    outline-offset: 3px;
-    border-radius: 4px;
-  }
-
-  /* ============ LAYOUT ============ */
-  .app{ display: flex; min-height: 100vh; }
-
-  .topbar{
-    display: none;
-    position: sticky; top:0; z-index: 40;
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 12px 16px; align-items: center; gap: 12px;
-  }
-  .topbar-title{ font-family: var(--font-display); font-weight: 600; font-size: 15px; }
-  .menu-btn{
-    background: var(--surface-raised); border: 1px solid var(--border); color: var(--text);
-    width: 38px; height: 38px; border-radius: 8px; display:flex; align-items:center; justify-content:center;
-    cursor: pointer; flex-shrink: 0;
-  }
-
-  .sidebar{
-    width: var(--sidebar-w); flex-shrink: 0;
-    background: #0a0f1c;
-    border-right: 1px solid var(--border-soft);
-    height: 100vh; position: sticky; top: 0;
-    overflow-y: auto;
-    padding: 28px 0 40px;
-  }
-  .sidebar::-webkit-scrollbar{ width: 8px; }
-  .sidebar::-webkit-scrollbar-thumb{ background: var(--border); border-radius: 4px; }
-
-  .sidebar-header{ padding: 0 24px 22px; border-bottom: 1px solid var(--border-soft); margin-bottom: 18px; }
-  .brand{ display:flex; align-items:center; gap:10px; margin-bottom: 14px; }
-  .brand svg{ flex-shrink:0; }
-  .brand-text{ font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: 0.2px; line-height: 1.25; }
-  .brand-text span{ display:block; font-family: var(--font-body); font-weight: 400; font-size: 11.5px; color: var(--text-dim); letter-spacing: 0.6px; text-transform: uppercase; margin-top: 2px;}
-  .course-tag{
-    display:inline-flex; align-items:center; gap:6px;
-    font-family: var(--font-mono); font-size: 11px; color: var(--d3);
-    background: var(--d3-soft); border: 1px solid rgba(62,207,158,0.25);
-    padding: 4px 9px; border-radius: 20px;
-  }
-
-  .nav-groups{ padding: 0 12px; }
-  .nav-group{ margin-bottom: 4px; }
-  .nav-group-header{
-    display:flex; align-items:center; gap: 10px;
-    padding: 10px 12px; margin: 10px 0 2px;
-    font-family: var(--font-display); font-weight: 600; font-size: 12.5px;
-    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px;
-    cursor: pointer; border-radius: 8px; user-select: none;
-  }
-  .nav-group-header:hover{ background: var(--surface); color: var(--text); }
-  .nav-dot{ width: 8px; height:8px; border-radius: 50%; flex-shrink:0; }
-  .nav-group[data-domain="1"] .nav-dot{ background: var(--d1); }
-  .nav-group[data-domain="2"] .nav-dot{ background: var(--d2); }
-  .nav-group[data-domain="3"] .nav-dot{ background: var(--d3); }
-  .nav-group[data-domain="4"] .nav-dot{ background: var(--d4); }
-
-  .nav-link{
-    display:block; text-decoration:none; color: var(--text-muted);
-    font-size: 13.5px; padding: 7px 12px 7px 30px; border-radius: 8px;
-    border-left: 2px solid transparent; margin-left: 4px;
-    transition: color .15s, background .15s, border-color .15s;
-  }
-  .nav-link:hover{ color: var(--text); background: var(--surface); }
-  .nav-link.active{ color: var(--text); background: var(--surface-raised); font-weight: 500; }
-  .nav-group[data-domain="1"] .nav-link.active{ border-left-color: var(--d1); }
-  .nav-group[data-domain="2"] .nav-link.active{ border-left-color: var(--d2); }
-  .nav-group[data-domain="3"] .nav-link.active{ border-left-color: var(--d3); }
-  .nav-group[data-domain="4"] .nav-link.active{ border-left-color: var(--d4); }
-
-  .sidebar-foot{
-    margin-top: 22px; padding: 14px 24px 0; border-top: 1px solid var(--border-soft);
-    font-size: 11.5px; color: var(--text-dim); line-height: 1.6;
-  }
-
-  /* ============ CONTENT ============ */
-  .content{ flex: 1; min-width: 0; }
-  .content-inner{ max-width: var(--content-max); margin: 0 auto; padding: 64px 32px 100px; }
-
-  /* HERO */
-  .hero{ margin-bottom: 76px; }
-  .hero-eyebrow{
-    font-family: var(--font-mono); font-size: 12.5px; color: var(--d3);
-    letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 16px;
-    display:flex; align-items:center; gap: 10px;
-  }
-  .hero-eyebrow::before{ content:''; width:22px; height:1px; background: var(--d3); }
-  .hero h1{ font-size: 40px; line-height: 1.15; margin-bottom: 18px; letter-spacing: -0.5px; }
-  .hero-lede{ font-size: 17px; color: var(--text-muted); max-width: 620px; margin-bottom: 8px; }
-  .hero-meta{
-    display:flex; flex-wrap:wrap; gap: 10px; margin-top: 24px;
-  }
-  .hero-meta-pill{
-    font-size: 12.5px; font-family: var(--font-mono); color: var(--text-muted);
-    background: var(--surface); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px;
-  }
-
-  .hero-visual{
-    margin: 44px 0 8px; padding: 36px 20px; background: radial-gradient(ellipse at 50% 40%, rgba(62,207,158,0.06), transparent 70%);
-    display:flex; flex-direction: column; align-items:center; gap: 20px;
-  }
-  .hero-visual svg{ max-width: 100%; height: auto; }
-  .hero-visual-caption{ font-size: 13px; color: var(--text-dim); text-align:center; max-width: 480px; }
-  .ring-label{ font-family: var(--font-mono); font-size: 12px; fill: var(--text-muted); }
-  .ring-label-strong{ font-family: var(--font-display); font-size: 13px; font-weight: 600; fill: var(--text); }
-
-  @keyframes pulse-core{
-    0%,100%{ opacity: 1; }
-    50%{ opacity: 0.55; }
-  }
-  @keyframes draw-ring{
-    from{ stroke-dashoffset: var(--dash); }
-    to{ stroke-dashoffset: 0; }
-  }
-  .core-pulse{ animation: pulse-core 2.8s ease-in-out infinite; transform-origin: center; }
-  .ring-draw{ animation: draw-ring 1.4s ease-out forwards; }
-
-  /* DOMAIN HEADER */
-  .domain{ margin-top: 96px; padding-top: 8px; scroll-margin-top: 24px; }
-  .domain:first-of-type{ margin-top: 0; }
-  .domain-header{
-    display:flex; align-items: baseline; gap: 18px; margin-bottom: 10px;
-    padding-bottom: 22px; border-bottom: 1px solid var(--border-soft);
-  }
-  .domain-num{ font-family: var(--font-display); font-size: 15px; font-weight: 700; font-family: var(--font-mono); }
-  .domain[data-d="1"] .domain-num{ color: var(--d1); }
-  .domain[data-d="2"] .domain-num{ color: var(--d2); }
-  .domain[data-d="3"] .domain-num{ color: var(--d3); }
-  .domain[data-d="4"] .domain-num{ color: var(--d4); }
-  .domain-header h2{ font-size: 28px; letter-spacing: -0.3px; }
-  .domain-intro{ color: var(--text-muted); font-size: 15.5px; margin: 18px 0 0; max-width: 640px; }
-
-  .objective{ margin-top: 52px; scroll-margin-top: 24px; }
-  .objective-header{ display:flex; align-items:center; gap: 12px; margin-bottom: 16px; }
-  .objective-tag{
-    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
-    padding: 3px 9px; border-radius: 6px; flex-shrink: 0;
-  }
-  .domain[data-d="1"] .objective-tag{ background: var(--d1-soft); color: var(--d1); }
-  .domain[data-d="2"] .objective-tag{ background: var(--d2-soft); color: var(--d2); }
-  .domain[data-d="3"] .objective-tag{ background: var(--d3-soft); color: var(--d3); }
-  .domain[data-d="4"] .objective-tag{ background: var(--d4-soft); color: var(--d4); }
-  .objective-header h3{ font-size: 19px; }
-  .objective > p:first-of-type{ color: var(--text-muted); }
-
-  /* ============ COMPONENTS ============ */
-
-  /* Term grid (definitions) */
-  .term-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 18px 0 22px; }
-  .term-card{
-    background: var(--surface); border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
-    padding: 14px 16px;
-  }
-  .term-card h4{ font-size: 14px; margin-bottom: 5px; display:flex; align-items:center; gap:8px; }
-  .term-card p{ font-size: 13.5px; color: var(--text-muted); margin: 0; }
-  .term-cat-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-  .cat-malware{ background: var(--bad); }
-  .cat-technique{ background: var(--warn); }
-  .cat-human{ background: var(--d2); }
-  .cat-vuln{ background: var(--text-dim); }
-
-  .legend{ display:flex; flex-wrap: wrap; gap: 16px; margin: 14px 0 4px; font-size: 12.5px; color: var(--text-muted); }
-  .legend-item{ display:flex; align-items:center; gap: 7px; }
-
-  /* Compare grid */
-  .compare-grid{ display:grid; gap: 12px; margin: 18px 0 22px; }
-  .compare-2{ grid-template-columns: repeat(2, 1fr); }
-  .compare-3{ grid-template-columns: repeat(3, 1fr); }
-  .compare-4{ grid-template-columns: repeat(4, 1fr); }
-  .compare-card{
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 18px;
-  }
-  .compare-card.accent-good{ border-color: rgba(62,207,158,0.35); background: linear-gradient(180deg, rgba(62,207,158,0.06), transparent 40%), var(--surface); }
-  .compare-card.accent-bad{ border-color: rgba(239,83,80,0.35); background: linear-gradient(180deg, rgba(239,83,80,0.06), transparent 40%), var(--surface); }
-  .compare-card h4{ font-size: 14.5px; margin-bottom: 8px; }
-  .compare-card p, .compare-card li{ font-size: 13.5px; color: var(--text-muted); }
-  .compare-card .verdict{
-    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-soft);
-    font-size: 12.5px; font-family: var(--font-mono); color: var(--text);
-  }
-
-  /* Exam tip callout */
-  .exam-tip{
-    display:flex; gap: 14px; background: var(--d4-soft); border: 1px solid rgba(245,185,66,0.3);
-    border-radius: var(--radius); padding: 16px 18px; margin: 20px 0;
-  }
-  .exam-tip svg{ flex-shrink:0; margin-top: 2px; }
-  .exam-tip-label{ font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--d4); margin-bottom: 4px; font-weight:600; }
-  .exam-tip p{ margin:0; font-size: 14px; color: var(--text); }
-
-  .info-note{
-    display:flex; gap: 14px; background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 16px 18px; margin: 20px 0;
-  }
-  .info-note svg{ flex-shrink:0; margin-top: 2px; color: var(--d2); }
-  .info-note p{ margin:0; font-size: 14px; color: var(--text-muted); }
-
-  /* Diagram box */
-  .diagram-box{
-    background: var(--surface); border: 1px solid var(--border-soft); border-radius: var(--radius);
-    padding: 28px 20px 20px; margin: 22px 0; display:flex; flex-direction:column; align-items:center;
-  }
-  .diagram-box svg{ max-width: 100%; height:auto; }
-  .diagram-caption{ font-size: 12.5px; color: var(--text-dim); margin-top: 14px; text-align:center; }
-
-  /* Port table */
-  .port-table{ width:100%; border-collapse: collapse; margin: 18px 0 22px; font-size: 13.5px; }
-  .port-table th{
-    text-align:left; font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase;
-    letter-spacing: 0.5px; color: var(--text-dim); padding: 8px 12px; border-bottom: 1px solid var(--border);
-  }
-  .port-table td{ padding: 10px 12px; border-bottom: 1px solid var(--border-soft); }
-  .port-table tr:hover td{ background: var(--surface); }
-  .port-num{ font-family: var(--font-mono); font-weight:600; color: var(--text); }
-  .sec-badge{ font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 20px; display:inline-block; }
-  .sec-badge.secure{ background: rgba(62,207,158,0.14); color: var(--good); }
-  .sec-badge.insecure{ background: rgba(239,83,80,0.14); color: var(--bad); }
-  .sec-badge.neutral{ background: rgba(139,147,240,0.14); color: var(--d2); }
-
-  /* Flip cards */
-  .flip-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
-  .flip-card{ perspective: 1000px; height: 116px; cursor:pointer; }
-  .flip-card-inner{
-    position:relative; width:100%; height:100%; text-align:center;
-    transition: transform 0.5s; transform-style: preserve-3d;
-  }
-  .flip-card.flipped .flip-card-inner{ transform: rotateY(180deg); }
-  .flip-card-front, .flip-card-back{
-    position:absolute; width:100%; height:100%; -webkit-backface-visibility:hidden; backface-visibility:hidden;
-    border-radius: var(--radius-sm); border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
-    padding: 12px; font-size: 13.5px;
-  }
-  .flip-card-front{ background: var(--surface-raised); font-family: var(--font-display); font-weight:600; font-size: 14px; }
-  .flip-card-back{ background: var(--d3-soft); border-color: rgba(62,207,158,0.3); transform: rotateY(180deg); color: var(--text); font-size: 12.5px; line-height:1.45; }
-  .flip-hint{ font-size: 11.5px; color: var(--text-dim); margin: -8px 0 18px; }
-
-  /* Timeline (backup types) */
-  .backup-timeline{ margin: 20px 0; }
-  .backup-row{ display:flex; align-items:center; gap: 14px; margin-bottom: 14px; }
-  .backup-row-label{ width: 96px; flex-shrink:0; font-size: 13.5px; font-weight: 600; }
-  .backup-days{ display:flex; gap: 6px; flex:1; }
-  .backup-day{
-    flex:1; height: 40px; border-radius: 6px; display:flex; align-items:center; justify-content:center;
-    font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); border: 1px solid var(--border-soft);
-    background: var(--surface);
-  }
-  .backup-day.full{ background: rgba(62,207,158,0.22); color: var(--good); border-color: rgba(62,207,158,0.4); font-weight:600; }
-  .backup-day.partial{ background: rgba(245,185,66,0.18); color: var(--warn); border-color: rgba(245,185,66,0.35); font-weight:600; }
-  .backup-day-heads{ display:flex; gap:6px; margin-bottom: 8px; padding-left: 110px; }
-  .backup-day-heads span{ flex:1; text-align:center; font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); }
-
-  /* Divider */
-  .section-divider{ height:1px; background: var(--border-soft); margin: 36px 0; border:none; }
-
-  /* Footer */
-  .site-footer{
-    margin-top: 100px; padding-top: 28px; border-top: 1px solid var(--border-soft);
-    font-size: 13px; color: var(--text-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
-  }
-
-  /* Utility */
-  .w-full{ grid-column: 1 / -1; }
-
-  @media (max-width: 980px){
-    .term-grid{ grid-template-columns: 1fr; }
-    .compare-3, .compare-4{ grid-template-columns: 1fr; }
-    .flip-grid{ grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 860px){
-    .topbar{ display:flex; }
-    .sidebar{
-      position: fixed; left:0; top:0; z-index: 50; transform: translateX(-100%);
-      transition: transform .25s ease; box-shadow: 0 0 40px rgba(0,0,0,0.5);
-    }
-    .sidebar.open{ transform: translateX(0); }
-    .content-inner{ padding: 36px 20px 80px; }
-    .hero h1{ font-size: 30px; }
-    .compare-2{ grid-template-columns: 1fr; }
-    .flip-grid{ grid-template-columns: 1fr 1fr; }
-    .domain-header{ flex-wrap: wrap; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Umar Khokhar - Portfolio & Services</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            500: '#10b981',
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card-light {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-brand-500 selection:text-white custom-scrollbar">
 
-<div class="topbar">
-  <button class="menu-btn" id="menuBtn" aria-label="Open navigation">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-  </button>
-  <div class="topbar-title">Network Security Study Guide</div>
-</div>
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 w-full z-40 transition-all duration-300 bg-slate-900/80 backdrop-blur-md border-b border-slate-800" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                    UK
+                </div>
+                <div>
+                    <span class="font-bold text-lg text-white block leading-tight">Dr. Umar Khokhar</span>
+                    <span class="text-xs text-brand-500 font-medium tracking-wide block">Educator & Security Expert</span>
+                </div>
+            </a>
 
-<div class="app">
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#about" class="text-slate-300 hover:text-brand-500 transition-colors">About</a>
+                <a href="#books" class="text-slate-300 hover:text-brand-500 transition-colors">Authored Books</a>
+                <a href="#services" class="text-slate-300 hover:text-brand-500 transition-colors">Services</a>
+                <a href="#youtube" class="text-slate-300 hover:text-brand-500 transition-colors">Lectures</a>
+                <a href="#contact" class="text-slate-300 hover:text-brand-500 transition-colors">Contact</a>
+            </nav>
 
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="brand">
-        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
-          <path d="M16 3L28 8V15C28 22.5 22.8 27.8 16 30C9.2 27.8 4 22.5 4 15V8L16 3Z" stroke="#3ecf9e" stroke-width="1.6" fill="rgba(62,207,158,0.08)"/>
-          <path d="M11 16L14.5 19.5L21.5 12.5" stroke="#3ecf9e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="brand-text">Network Security<span>Certification Study Guide</span></div>
-      </div>
-      <div class="course-tag">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
-        ITS-102 · Certiport IT Specialist
-      </div>
+            <div class="hidden md:flex items-center gap-4">
+                <button onclick="openBookingModal('General Consultation')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-md shadow-brand-600/30 hover:shadow-brand-500/50 transition-all transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-calendar-check mr-2">="true"</i>Book Session
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white text-2xl focus:outline-none p-2" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">About</a>
+            <a href="#books" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Authored Books</a>
+            <a href="#services" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Services</a>
+            <a href="#youtube" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Lectures</a>
+            <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Contact</a>
+            <button onclick="openBookingModal('General Consultation')" class="w-full mt-2 px-5 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-white font-semibold text-sm text-center">
+                <i class="fa-solid fa-calendar-check mr-2"></i>Book Consultation
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+        <!-- Background Grid & Glow Effect -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-brand-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[350px] h-[350px] bg-indigo-600/15 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Hero Content -->
+                <div class="lg:col-span-7 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-brand-500 text-xs sm:text-sm font-semibold mb-6">
+                        <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                        Author of 5 Academic & Technical Books
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
+                        Dr. Umar Khokhar
+                    </h1>
+
+                    <p class="text-xl sm:text-2xl text-slate-300 font-medium mb-4">
+                        Associate Professor, Cybersecurity Consultant & Career Mentor
+                    </p>
+
+                    <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+                        Empowering through Education, Technology, and Professional Guidance. Bridging the gap between core computer science fundamentals, offensive cybersecurity practices, and student career excellence.
+                    </p>
+
+                    <!-- CTAs -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                        <a href="#services" class="px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-600/25 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved"></i> Explore Services
+                        </a>
+                        <a href="#books" class="px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> My Authored Books
+                        </a>
+                        <a href="#contact" class="px-6 py-3.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800 font-semibold transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Get in Touch
+                        </a>
+                    </div>
+
+                    <!-- Highlights Stat Badges -->
+                    <div class="mt-12 pt-8 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center lg:text-left">
+                        <div>
+                            <div class="text-3xl font-extrabold text-white">5+</div>
+                            <div class="text-xs text-slate-400 font-medium mt-1">Authored Books</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-extrabold text-brand-500">10+</div>
+                            <div class="text-xs text-slate-400 font-medium mt-1">Years Teaching</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-extrabold text-white">100s</div>
+                            <div class="text-xs text-slate-400 font-medium mt-1">Pen-Tests & Audits</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-extrabold text-indigo-400">1000s</div>
+                            <div class="text-xs text-slate-400 font-medium mt-1">Students Mentored</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Graphic / Profile Avatar -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
+                        <!-- Orbit Rings -->
+                        <div class="absolute inset-0 rounded-full border-2 border-dashed border-slate-700/60 animate-spin" style="animation-duration: 40s;"></div>
+                        <div class="absolute inset-4 rounded-full border border-slate-800"></div>
+                        
+                        <!-- Main Card / Avatar Container -->
+                        <div class="absolute inset-2 rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/80 shadow-2xl flex flex-col items-center justify-center p-6 text-center overflow-hidden">
+                            <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-slate-800 border-4 border-brand-500/30 flex items-center justify-center shadow-inner mb-4 overflow-hidden relative group">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" alt="Dr. Umar Khokhar" class="w-full h-full object-cover filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" onerror="this.src='https://placehold.co/400x400/1e293b/0ea5e9?text=Dr.+Umar+Khokhar'">
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Dr. Umar Khokhar</h3>
+                            <p class="text-xs text-brand-500 font-semibold uppercase tracking-wider mt-1">Ph.D. Computer Science</p>
+                            
+                            <!-- Badges floating -->
+                            <div class="mt-4 flex flex-wrap justify-center gap-2">
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 text-xs border border-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-graduation-cap text-indigo-400"></i> Academic
+                                </span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 text-xs border border-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-[#00ff00] fa-user-ninja text-emerald-400"></i> Cyber Sec
+                                </span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 text-xs border border-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-book text-amber-400"></i> OER Author
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-20 bg-slate-900/60 border-y border-slate-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-500/10 rounded-full blur-2xl"></div>
+                        <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                            <i class="fa-solid fa-user-check text-brand-500"></i> Bio & Mission
+                        </h3>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
+                            Dr. Umar Khokhar is an Associate Professor, seasoned cybersecurity researcher, and dedicated open educator. With a deep passion for democratizing higher education in Information Technology, he has authored comprehensive open-access textbooks designed for university students and industry professionals alike.
+                        </p>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Beyond academia, Dr. Khokhar conducts high-stakes penetration testing, security audits, and specialized technical keynotes. He actively mentors aspiring security analysts, software engineers, and post-graduate researchers worldwide.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7">
+                    <div class="inline-block px-3 py-1 rounded-md bg-brand-500/10 text-brand-500 text-xs font-bold uppercase tracking-wider mb-3">
+                        Pillars of Expertise
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-6">
+                        Bridging Theoretical Academic Rigor with Real-World Cyber Defense
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        <!-- Core Card 1 -->
+                        <div class="p-5 rounded-xl bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition-all">
+                            <div class="w-10 h-10 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-500 flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-laptop-code text-lg"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Open Educational Resources</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                Authoring accessible, zero-cost textbooks covering OS, Networks, Forensics, and Ethical Hacking to reduce student barriers.
+                            </p>
+                        </div>
+
+                        <!-- Core Card 2 -->
+                        <div class="p-5 rounded-xl bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition-all">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-user-shield text-lg"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Penetration Testing</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                Identifying critical security flaws in enterprise applications and networks before malicious actors can exploit them.
+                            </p>
+                        </div>
+
+                        <!-- Core Card 3 -->
+                        <div class="p-5 rounded-xl bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition-all">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-compass text-lg"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Career & Academic Mentorship</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                Guiding computer science students through graduate roadmaps, industry certifications, and research publishing.
+                            </p>
+                        </div>
+
+                        <!-- Core Card 4 -->
+                        <div class="p-5 rounded-xl bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition-all">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-vial-virus text-lg"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Virtual Lab Engineering</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                Designing modular hands-on cybersecurity environments utilizing Kali Linux, Packet Tracer, and Snort IDS.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Books Showcase Section -->
+    <section id="books" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="px-3 py-1 rounded-md bg-indigo-500/10 text-indigo-400 text-xs font-bold uppercase tracking-wider">
+                    Published Literature
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3 mb-4">
+                    Authored Academic Textbooks
+                </h2>
+                <p class="text-slate-400 text-base">
+                    Comprehensive, high-impact textbooks authored by Dr. Umar Khokhar to support higher education curricula and practical self-learning worldwide.
+                </p>
+
+                <!-- Books Category Filter -->
+                <div class="flex flex-wrap justify-center gap-2 mt-8" id="book-filters">
+                    <button onclick="filterBooks('all')" class="book-filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-brand-600 text-white shadow-md">All Books (5)</button>
+                    <button onclick="filterBooks('security')" class="book-filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Cybersecurity</button>
+                    <button onclick="filterBooks('core')" class="book-filter-btn px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Core CS & Systems</button>
+                </div>
+            </div>
+
+            <!-- Books Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="books-grid">
+                
+                <!-- Book 1 -->
+                <div class="book-card core group bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-brand-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-brand-500/5">
+                    <div>
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+                                Open Educational Resource
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono">Vol. 1</span>
+                        </div>
+                        <div class="w-12 h-16 bg-gradient-to-br from-blue-600 to-indigo-800 rounded-md shadow-md mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-500 transition-colors mb-2">
+                            Operating Systems: Concepts & Architecture
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Deep dive into process management, CPU scheduling, memory virtualisation, concurrency, file system design, and security primitives in modern OS kernels.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-book-open text-brand-500 mr-1"></i> Academic Textbook</span>
+                        <button onclick="openBookModal('Operating Systems: Concepts & Architecture', 'Comprehensive textbook covering kernel operations, memory management, and process concurrency.')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-brand-600 text-slate-200 hover:text-white text-xs font-semibold transition-all">
+                            Details / Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="book-card core group bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-brand-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-brand-500/5">
+                    <div>
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-semibold">
+                                Free Digital Edition
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono">Vol. 2</span>
+                        </div>
+                        <div class="w-12 h-16 bg-gradient-to-br from-cyan-600 to-blue-800 rounded-md shadow-md mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-500 transition-colors mb-2">
+                            Computer Networking & Protocol Analysis
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Explores OSI & TCP/IP layered architecture, routing protocols, packet capture analysis with Wireshark, and enterprise network design fundamentals.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-book-open text-brand-500 mr-1"></i> Lab Guide Included</span>
+                        <button onclick="openBookModal('Computer Networking & Protocol Analysis', 'Focuses on TCP/IP protocols, Wireshark lab exercises, and routing mechanics.')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-brand-600 text-slate-200 hover:text-white text-xs font-semibold transition-all">
+                            Details / Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Book 3 -->
+                <div class="book-card security group bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-brand-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-brand-500/5">
+                    <div>
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+                                Open Educational Resource
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono">Vol. 3</span>
+                        </div>
+                        <div class="w-12 h-16 bg-gradient-to-br from-emerald-600 to-teal-800 rounded-md shadow-md mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-500 transition-colors mb-2">
+                            Fundamentals of Information Security
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Foundational principles of CIA triad, applied cryptography, access control models, threat modeling, and organization security policy frameworks.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-book-open text-brand-500 mr-1"></i> Core Security</span>
+                        <button onclick="openBookModal('Fundamentals of Information Security', 'Covers foundational cryptography, access control, risk management and defense.')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-brand-600 text-slate-200 hover:text-white text-xs font-semibold transition-all">
+                            Details / Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Book 4 -->
+                <div class="book-card security group bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-brand-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-brand-500/5">
+                    <div>
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-semibold">
+                                Specialist Guide
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono">Vol. 4</span>
+                        </div>
+                        <div class="w-12 h-16 bg-gradient-to-br from-purple-600 to-indigo-900 rounded-md shadow-md mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-500 transition-colors mb-2">
+                            Digital Forensics & Incident Response
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Practical methodologies for disk image acquisition, memory forensics, artifact analysis, chain of custody preservation, and incident handling.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-book-open text-brand-500 mr-1"></i> Advanced Forensics</span>
+                        <button onclick="openBookModal('Digital Forensics & Incident Response', 'Includes step-by-step memory analysis, file carving, and IR playbook samples.')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-brand-600 text-slate-200 hover:text-white text-xs font-semibold transition-all">
+                            Details / Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Book 5 -->
+                <div class="book-card security group bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-brand-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-brand-500/5">
+                    <div>
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs font-semibold">
+                                Hands-on Offensive Sec
+                            </span>
+                            <span class="text-slate-500 text-xs font-mono">Vol. 5</span>
+                        </div>
+                        <div class="w-12 h-16 bg-gradient-to-br from-rose-600 to-red-800 rounded-md shadow-md mb-4 flex items-center justify-center text-white text-2xl font-bold">
+                            <i class="fa-solid fa-bug"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-500 transition-colors mb-2">
+                            Ethical Hacking & Web App Security
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Hands-on offensive tactics: OWASP Top 10 web vulnerabilities, SQL injection, XSS, exploit development basics, and ethical penetration testing.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-book-open text-brand-500 mr-1"></i> Ethical Hacking</span>
+                        <button onclick="openBookModal('Ethical Hacking & Web App Security', 'A practical lab guide with OWASP Juice Shop and DVWA walk-throughs.')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-brand-600 text-slate-200 hover:text-white text-xs font-semibold transition-all">
+                            Details / Download
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 bg-slate-900/80 border-t border-slate-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="px-3 py-1 rounded-md bg-brand-500/10 text-brand-500 text-xs font-bold uppercase tracking-wider">
+                    Professional Offerings
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3 mb-4">
+                    Services & Consulting
+                </h2>
+                <p class="text-slate-400 text-base">
+                    Tailored security assessments, academic direction, motivational keynotes, and cybersecurity educational infrastructure.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Service 1: Penetration Testing -->
+                <div class="glass-card rounded-2xl p-8 hover:border-brand-500/40 transition-all group">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-brand-500/10 border border-brand-500/30 text-brand-500 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-user-ninja"></i>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-brand-400">Cybersecurity</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Penetration Testing & Security Audits</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        In-depth offensive security assessments designed to uncover vulnerabilities before threat actors exploit them. Delivered with comprehensive executive remediation reports.
+                    </p>
+                    <ul class="space-y-2 mb-8 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500 text-xs"></i> Web Application Penetration Testing (OWASP)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500 text-xs"></i> Network Vulnerability Assessment & Auditing</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500 text-xs"></i> Defensive Hardening & Configuration Review</li>
+                    </ul>
+                    <button onclick="openBookingModal('Penetration Testing & Security Audits')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-brand-600 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                        Request Security Audit <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Service 2: Career Counseling -->
+                <div class="glass-card rounded-2xl p-8 hover:border-indigo-500/40 transition-all group">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-indigo-400">Mentorship</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Career Counseling & Academic Mentorship</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        One-on-one professional guidance for students, computer science graduates, and professionals breaking into the cybersecurity field.
+                    </p>
+                    <ul class="space-y-2 mb-8 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> Cybersecurity Career Path Mapping (SOC, Pentest, DFIR)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> Academic Research Proposal & Thesis Direction</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400 text-xs"></i> Resume Review & Interview Prep</li>
+                    </ul>
+                    <button onclick="openBookingModal('Career Counseling & Mentorship')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                        Book Mentorship Session <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Service 3: Motivational Speaking -->
+                <div class="glass-card rounded-2xl p-8 hover:border-emerald-500/40 transition-all group">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-emerald-400">Keynotes</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Motivational Speaking & Keynote Workshops</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Engaging keynotes and interactive workshops covering educational growth, cybersecurity awareness, ethical hacking, and tech innovations.
+                    </p>
+                    <ul class="space-y-2 mb-8 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> University Keynotes & Guest Lectures</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Corporate Cybersecurity Awareness Workshops</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400 text-xs"></i> Hands-on Ethical Hacking Bootcamps</li>
+                    </ul>
+                    <button onclick="openBookingModal('Motivational Speaking & Workshops')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-emerald-600 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                        Invite as Speaker <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Service 4: Curriculum & Lab Design -->
+                <div class="glass-card rounded-2xl p-8 hover:border-amber-500/40 transition-all group">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-flask"></i>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 text-amber-400">Education Tech</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Curriculum & Hands-on Lab Design</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Custom curriculum formulation and virtual laboratory architecture for universities, technical colleges, and training academies.
+                    </p>
+                    <ul class="space-y-2 mb-8 text-sm text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 text-xs"></i> Kali Linux & Snort Virtual Lab Setups</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 text-xs"></i> Course Syllabus Development (ACM / IEEE Standards)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 text-xs"></i> Interactive Vulnerable App Environments (DVWA, WebGoat)</li>
+                    </ul>
+                    <button onclick="openBookingModal('Curriculum & Lab Design')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-amber-600 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                        Consult on Curriculum <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- YouTube & Media Section -->
+    <section id="youtube" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-r from-red-950/40 via-slate-900 to-slate-900 rounded-3xl p-8 sm:p-12 border border-red-900/30 relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                    <div class="lg:col-span-8">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-bold uppercase mb-4">
+                            <i class="fa-brands fa-youtube text-red-500"></i> Featured Video Channel
+                        </div>
+                        <h2 class="text-3xl font-extrabold text-white mb-3">
+                            "Lecture Notes of Information Technology"
+                        </h2>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                            Dr. Umar Khokhar hosts an educational YouTube initiative delivering accessible video lectures on Operating Systems, Packet Tracer Networking, Computer Architecture, and Cybersecurity.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-sm shadow-lg shadow-red-600/30 transition-all flex items-center gap-2">
+                                <i class="fa-brands fa-youtube text-lg"></i> Watch Channel
+                            </a>
+                            <a href="#contact" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-message"></i> Request Lecture Topic
+                            </a>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-4 flex justify-center">
+                        <div class="w-full max-w-sm rounded-2xl bg-slate-950/80 p-5 border border-slate-800 text-center shadow-2xl">
+                            <i class="fa-solid fa-circle-play text-red-500 text-5xl mb-3"></i>
+                            <h4 class="text-white font-bold text-lg">Free Educational Lectures</h4>
+                            <p class="text-slate-400 text-xs mt-1">Available to students globally for coursework reference and exam preparation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-slate-900/60 border-t border-slate-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <!-- Contact Details -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div>
+                        <span class="px-3 py-1 rounded-md bg-brand-500/10 text-brand-500 text-xs font-bold uppercase tracking-wider">
+                            Get In Touch
+                        </span>
+                        <h2 class="text-3xl font-extrabold text-white mt-3 mb-4">
+                            Let's Collaborate or Connect
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Whether you need penetration testing services, academic consultation, career guidance, or speaker invitations, reach out directly using the form or email details below.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="w-10 h-10 rounded-lg bg-brand-500/10 text-brand-500 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-sm font-semibold">Direct Email</h4>
+                                <p class="text-slate-400 text-sm font-mono mt-0.5">dr.umar.khokhar@example.edu</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-building-columns"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-sm font-semibold">Academic Office</h4>
+                                <p class="text-slate-400 text-sm mt-0.5">Department of Computer Science & IT</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                                <i class="fa-brands fa-linkedin"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-sm font-semibold">LinkedIn Profile</h4>
+                                <a href="#" class="text-brand-400 hover:underline text-sm mt-0.5 inline-block">linkedin.com/in/drumarkhokhar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-7">
+                    <div class="glass-card rounded-2xl p-8">
+                        <h3 class="text-xl font-bold text-white mb-6">Send a Message</h3>
+                        
+                        <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-5">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Full Name</label>
+                                    <input type="text" required class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-brand-500 text-sm" placeholder="e.g. John Doe">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
+                                    <input type="email" required class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-brand-500 text-sm" placeholder="john@example.com">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Inquiry Type</label>
+                                <select class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-brand-500 text-sm">
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Penetration Testing">Penetration Testing / Audit</option>
+                                    <option value="Career Counseling">Career Mentorship</option>
+                                    <option value="Speaking Engagement">Keynote / Workshop Invitation</option>
+                                    <option value="Textbook Inquiry">Textbook & OER Rights</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Message</label>
+                                <textarea rows="4" required class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-brand-500 text-sm" placeholder="Detail your requirements or questions..."></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-brand-600/25 transition-all">
+                                Send Message <i class="fa-solid fa-paper-plane ml-2 text-xs"></i>
+                            </button>
+                        </form>
+
+                        <div id="contact-success" class="hidden mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm text-center">
+                            <i class="fa-solid fa-circle-check mr-2"></i> Thank you! Your message has been sent successfully. Dr. Umar Khokhar's office will respond shortly.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <a href="#" class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">UK</div>
+                        <span class="font-bold text-white text-base">Dr. Umar Khokhar</span>
+                    </a>
+                    <p class="text-xs text-slate-500 mt-1">Associate Professor & Cybersecurity Specialist</p>
+                </div>
+
+                <div class="flex items-center gap-6 text-sm text-slate-400">
+                    <a href="#about" class="hover:text-white transition-colors">About</a>
+                    <a href="#books" class="hover:text-white transition-colors">Books</a>
+                    <a href="#services" class="hover:text-white transition-colors">Services</a>
+                    <a href="#youtube" class="hover:text-white transition-colors">Lectures</a>
+                </div>
+
+                <div class="flex items-center gap-4 text-slate-400">
+                    <a href="https://www.youtube.com" target="_blank" rel="noopener opacity" class="hover:text-red-500 text-lg transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="hover:text-brand-500 text-lg transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" class="hover:text-brand-400 text-lg transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="hover:text-emerald-400 text-lg transition-colors"><i class="fa-solid fa-graduation-cap"></i></a>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-slate-900 text-center text-xs text-slate-600">
+                &copy; <span id="year">2026</span> Dr. Umar Khokhar. All Rights Reserved. Empowering future technology leaders.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking / Service Request Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+            <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="text-2xl font-bold text-white mb-2" id="modal-title">Book a Consultation</h3>
+            <p class="text-xs text-slate-400 mb-6">Schedule a dedicated session or request service proposal from Dr. Umar Khokhar.</p>
+
+            <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Service Selected</label>
+                    <input type="text" id="selected-service-input" readonly class="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-brand-400 font-semibold text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Your Full Name</label>
+                    <input type="text" required class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white focus:border-brand-500 text-sm" placeholder="Full name">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Email Address</label>
+                    <input type="email" required class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white focus:border-brand-500 text-sm" placeholder="email@address.com">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Preferred Timing / Details</label>
+                    <textarea rows="3" required class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white focus:border-brand-500 text-sm" placeholder="Briefly describe your goals or preferred schedule..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm shadow-lg transition-all mt-2">
+                    Submit Request
+                </button>
+            </form>
+
+            <div id="booking-success" class="hidden mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm text-center">
+                <i class="fa-solid fa-circle-check mr-2"></i> Booking request received! You will receive a confirmation email shortly.
+            </div>
+        </div>
     </div>
 
-    <div class="nav-groups">
-      <div class="nav-group" data-domain="1">
-        <div class="nav-group-header"><span class="nav-dot"></span> 1 · Defense in Depth</div>
-        <a class="nav-link" href="#obj-1-1">1.1 Core Security Principles</a>
-        <a class="nav-link" href="#obj-1-2">1.2 Physical Security</a>
-        <a class="nav-link" href="#obj-1-3">1.3 Security Policy Types</a>
-        <a class="nav-link" href="#obj-1-4">1.4 Attack Types</a>
-        <a class="nav-link" href="#obj-1-5">1.5 Backup &amp; Restore Types</a>
-      </div>
-      <div class="nav-group" data-domain="2">
-        <div class="nav-group-header"><span class="nav-dot"></span> 2 · OS Security</div>
-        <a class="nav-link" href="#obj-2-1">2.1 Client &amp; Server Protection</a>
-        <a class="nav-link" href="#obj-2-2">2.2 User Authentication</a>
-        <a class="nav-link" href="#obj-2-3">2.3 Windows &amp; Linux Permissions</a>
-        <a class="nav-link" href="#obj-2-4">2.4 Auditing &amp; Log Files</a>
-        <a class="nav-link" href="#obj-2-5">2.5 Encryption</a>
-      </div>
-      <div class="nav-group" data-domain="3">
-        <div class="nav-group-header"><span class="nav-dot"></span> 3 · Network Device Security</div>
-        <a class="nav-link" href="#obj-3-1">3.1 Wireless Security</a>
-        <a class="nav-link" href="#obj-3-2">3.2 Network Protection Devices</a>
-        <a class="nav-link" href="#obj-3-3">3.3 Network Isolation Methods</a>
-        <a class="nav-link" href="#obj-3-4">3.4 Protocol Security &amp; Ports</a>
-      </div>
-      <div class="nav-group" data-domain="4">
-        <div class="nav-group-header"><span class="nav-dot"></span> 4 · Secure Computing</div>
-        <a class="nav-link" href="#obj-4-1">4.1 Email Protection</a>
-        <a class="nav-link" href="#obj-4-2">4.2 Browser Security</a>
-        <a class="nav-link" href="#obj-4-3">4.3 Anti-Malware &amp; Antivirus</a>
-      </div>
+    <!-- Book Details Modal -->
+    <div id="book-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+            <button onclick="closeBookModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center text-2xl mb-4">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white mb-2" id="book-modal-title">Book Title</h3>
+            <p class="text-sm text-slate-300 leading-relaxed mb-6" id="book-modal-desc">Book description goes here...</p>
+
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 mb-6">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                    <span>License:</span>
+                    <span class="text-emerald-400 font-semibold">Open Educational Resource (OER)</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span>Format:</span>
+                    <span class="text-white font-mono">PDF / ePub / Physical Print</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="simulateDownload()" class="flex-1 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download"></i> Download Open Edition
+                </button>
+                <button onclick="closeBookModal()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold">
+                    Close
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="sidebar-foot">
-      Aligned to the official Certiport IT Specialist — Network Security exam objectives (4 domains, 17 objectives).
-    </div>
-  </nav>
-
-  <main class="content">
-    <div class="content-inner">
-
-      <section class="hero">
-        <div class="hero-eyebrow">Certiport IT Specialist · Network Security</div>
-        <h1>The complete Network Security<br>certification study guide</h1>
-        <p class="hero-lede">Every objective from the official exam blueprint — Defense in Depth, Operating System Security, Network Device Security, and Secure Computing — explained with plain-English definitions, comparisons, and diagrams built for the exam.</p>
-        <div class="hero-meta">
-          <span class="hero-meta-pill">4 domains</span>
-          <span class="hero-meta-pill">17 objectives</span>
-          <span class="hero-meta-pill">150+ exam terms</span>
-          <span class="hero-meta-pill">Passing score: 700 / 1000</span>
-        </div>
-
-        <div class="hero-visual">
-          <svg viewBox="0 0 460 300" width="460">
-            <circle cx="230" cy="150" r="128" fill="none" stroke="#263349" stroke-width="1.5" stroke-dasharray="410" class="ring-draw" style="--dash:410; animation-delay:0s"/>
-            <circle cx="230" cy="150" r="94" fill="none" stroke="#3a5a6f" stroke-width="1.5" stroke-dasharray="300" class="ring-draw" style="--dash:300; animation-delay:.15s"/>
-            <circle cx="230" cy="150" r="60" fill="none" stroke="#3ecf9e" stroke-width="1.8" stroke-dasharray="188" class="ring-draw" style="--dash:188; animation-delay:.3s"/>
-            <circle cx="230" cy="150" r="10" fill="#3ecf9e" class="core-pulse"/>
-            <path d="M226 150l3 4 7-8" stroke="#06120e" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-
-            <text x="230" y="14" text-anchor="middle" class="ring-label-strong">Physical Controls</text>
-            <text x="230" y="30" text-anchor="middle" class="ring-label">guards · locks · mantraps · site access</text>
-
-            <text x="230" y="54" text-anchor="middle" class="ring-label-strong">Administrative Controls</text>
-            <text x="230" y="70" text-anchor="middle" class="ring-label">policies · training · procedures</text>
-
-            <text x="230" y="94" text-anchor="middle" class="ring-label-strong">Technical Controls</text>
-            <text x="230" y="110" text-anchor="middle" class="ring-label">firewalls · encryption · authentication</text>
-
-            <text x="230" y="270" text-anchor="middle" class="ring-label" fill="#8996b0">Your data and systems — the asset every layer protects</text>
-          </svg>
-          <p class="hero-visual-caption"><strong style="color:var(--text)">Defense in Depth</strong> means no single control is expected to stop every threat — physical, administrative, and technical layers overlap so that if one fails, the next one holds.</p>
-        </div>
-      </section>
-
-      <section class="domain" data-d="1" id="domain-1">
-        <div class="domain-header">
-          <span class="domain-num">01</span>
-          <h2>Defense in Depth</h2>
-        </div>
-        <p class="domain-intro">The foundation domain: the core vocabulary of security (confidentiality, risk, vulnerability), physical protections, policy types, the full catalog of attack types you'll be tested on, and backup strategy.</p>
-
-        <div class="objective" id="obj-1-1">
-          <div class="objective-header"><span class="objective-tag">1.1</span><h3>Identify Core Security Principles</h3></div>
-          <p>Every other topic in this guide is built on these definitions. Expect the exam to test whether you can tell these terms apart, not just define them individually.</p>
-
-          <div class="diagram-box">
-            <svg viewBox="0 0 380 260" width="360">
-              <polygon points="190,30 340,220 40,220" fill="none" stroke="#263349" stroke-width="1.5"/>
-              <circle cx="190" cy="30" r="4" fill="#ef5350"/>
-              <circle cx="340" cy="220" r="4" fill="#8b93f0"/>
-              <circle cx="40" cy="220" r="4" fill="#3ecf9e"/>
-              <text x="190" y="18" text-anchor="middle" class="ring-label-strong" fill="#ef5350">Confidentiality</text>
-              <text x="190" y="248" text-anchor="middle" class="ring-label" fill="#8996b0">only authorized parties can view the data</text>
-              <text x="352" y="216" text-anchor="start" class="ring-label-strong" fill="#8b93f0">Integrity</text>
-              <text x="352" y="232" text-anchor="start" class="ring-label" fill="#8996b0">data hasn't been altered</text>
-              <text x="28" y="216" text-anchor="end" class="ring-label-strong" fill="#3ecf9e">Availability</text>
-              <text x="28" y="232" text-anchor="end" class="ring-label" fill="#8996b0">accessible when needed</text>
-            </svg>
-            <p class="diagram-caption">The CIA Triad — the three goals every security control ultimately serves.</p>
-          </div>
-
-          <div class="compare-grid compare-3">
-            <div class="compare-card">
-              <h4 style="color:var(--d1)">Threat</h4>
-              <p>Anything with the <em>potential</em> to cause harm — a hacker, malware, a fire, a disgruntled employee. A threat is the "who or what."</p>
-            </div>
-            <div class="compare-card">
-              <h4 style="color:var(--d2)">Vulnerability</h4>
-              <p>A weakness that could be exploited — unpatched software, a weak password policy, an unlocked server room. The vulnerability is the "open door."</p>
-            </div>
-            <div class="compare-card">
-              <h4 style="color:var(--d3)">Risk</h4>
-              <p>The likelihood and impact of a threat actually exploiting a vulnerability. Risk only exists where a threat and a vulnerability meet.</p>
-            </div>
-          </div>
-
-          <div class="exam-tip">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5b942" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
-            <div><div class="exam-tip-label">Exam Tip</div><p>No threat + no vulnerability = no risk. If a question describes a weakness with nothing capable of exploiting it, the risk is low even if the vulnerability sounds scary.</p></div>
-          </div>
-
-          <div class="term-grid">
-            <div class="term-card">
-              <h4>Non-Repudiation</h4>
-              <p>Proof that a specific person performed a specific action, so they can't later deny it — enabled by digital signatures, audit logs, and biometrics.</p>
-            </div>
-            <div class="term-card">
-              <h4>Principle of Least Privilege</h4>
-              <p>Every user, process, and system should have only the minimum access needed to do its job — nothing more.</p>
-            </div>
-            <div class="term-card w-full">
-              <h4>Attack Surface (including IoT)</h4>
-              <p>The total sum of every point where an attacker could try to get in or extract data — open ports, user accounts, apps, APIs, and physical devices. IoT devices (cameras, thermostats, printers) expand the attack surface significantly because they're often shipped with weak default credentials and rarely get patched.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-1-2">
-          <div class="objective-header"><span class="objective-tag">1.2</span><h3>Define and Enforce Physical Security</h3></div>
-          <p>Physical security is the outermost layer of defense in depth — if someone can walk up to the hardware, every technical control downstream is at risk.</p>
-          <div class="term-grid">
-            <div class="term-card">
-              <h4>Site Security</h4>
-              <p>Controls at the building/facility level: fencing, security guards, badge readers, CCTV, lighting.</p>
-            </div>
-            <div class="term-card">
-              <h4>Computer Security</h4>
-              <p>Protecting individual devices: cable locks, locked server racks/rooms, cases that alert on tampering.</p>
-            </div>
-            <div class="term-card">
-              <h4>Removable Devices &amp; Drives</h4>
-              <p>USB drives and external disks are an easy way to exfiltrate data or introduce malware — policies often disable USB ports or require encryption.</p>
-            </div>
-            <div class="term-card">
-              <h4>Mantraps</h4>
-              <p>A small space with two interlocking doors — only one can ever be open at a time — used to stop tailgating/piggybacking into secure areas.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-1-3">
-          <div class="objective-header"><span class="objective-tag">1.3</span><h3>Identify Security Policy Types</h3></div>
-          <p>Security controls fall into three families. This guide's opening diagram already showed you all three — here's the split that matters for the exam:</p>
-          <div class="compare-grid compare-2">
-            <div class="compare-card">
-              <h4 style="color:var(--d2)">Administrative Controls</h4>
-              <p>Policies, procedures, guidelines, and training — the "paperwork and people" layer. Examples: acceptable use policy, security awareness training, onboarding/offboarding checklists.</p>
-            </div>
-            <div class="compare-card">
-              <h4 style="color:var(--d3)">Technical Controls</h4>
-              <p>Technology enforcing security automatically — the "systems" layer. Examples: firewalls, encryption, access control lists, antivirus, MFA.</p>
-            </div>
-          </div>
-          <div class="info-note">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <p>Physical controls (locks, guards, mantraps — from 1.2) round out the full picture as the third classic control family, even though this exam objective names only administrative and technical.</p>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-1-4">
-          <div class="objective-header"><span class="objective-tag">1.4</span><h3>Identify Attack Types</h3></div>
-          <p>This is the densest objective on the exam — expect several questions built directly from this vocabulary list. Terms are grouped by category so you can spot patterns instead of memorizing a flat list.</p>
-
-          <h4 style="margin:28px 0 4px; font-size:15px;">Types of Vulnerabilities</h4>
-          <p style="color:var(--text-muted); font-size:14px; margin-bottom:4px;">Before the attacks themselves — know what kind of weakness they typically exploit:</p>
-          <div class="term-grid">
-            <div class="term-card"><h4><span class="term-cat-dot cat-vuln"></span>Software</h4><p>Bugs, unpatched code, or coding flaws (like unchecked input) that can be exploited.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-vuln"></span>Configuration</h4><p>Insecure default settings, open ports, or misconfigured permissions left in place.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-vuln"></span>Human</h4><p>Lack of training or awareness — people are tricked rather than systems being broken.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-vuln"></span>Physical</h4><p>Unsecured hardware, facilities, or removable media that can be physically accessed.</p></div>
-          </div>
-
-          <h4 style="margin:32px 0 4px; font-size:15px;">Malware Types</h4>
-          <div class="legend">
-            <div class="legend-item"><span class="term-cat-dot cat-malware"></span> Malware</div>
-          </div>
-          <div class="term-grid">
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Virus</h4><p>Attaches to a legitimate file/program and needs a user action (opening it) to spread.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Polymorphic Virus</h4><p>Changes its own code/signature each time it replicates, to evade signature-based antivirus detection.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Worm</h4><p>Self-replicating and spreads across a network on its own — no host file or user action required.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Trojan Horse</h4><p>Disguised as legitimate software; doesn't self-replicate — it relies on tricking the user into installing it.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Spyware</h4><p>Secretly monitors and collects user activity (keystrokes, browsing) without consent.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Ransomware</h4><p>Encrypts the victim's files/system and demands payment for the decryption key.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Adware</h4><p>Automatically displays or downloads unwanted advertisements, often bundled with free software.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Rootkit</h4><p>Gains and hides privileged (admin/root) access, often by modifying the OS at a deep level to stay invisible.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Backdoor</h4><p>A hidden way to bypass normal authentication and regain access later, planted by an attacker or developer.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Keylogger (Software/Hardware)</h4><p>Records every keystroke to capture passwords and sensitive data — can be a program or a small physical device on the keyboard cable.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-malware"></span>Logic Bomb</h4><p>Malicious code that lies dormant until triggered by a specific date or condition (e.g., "if my account is ever deactivated, delete these files").</p></div>
-          </div>
-
-          <h4 style="margin:32px 0 4px; font-size:15px;">Attack Techniques</h4>
-          <div class="legend">
-            <div class="legend-item"><span class="term-cat-dot cat-technique"></span> Technique</div>
-          </div>
-          <div class="term-grid">
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>Buffer Overflow</h4><p>A program writes more data into memory than a buffer can hold, overwriting adjacent memory — can lead to crashes or code execution.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>Zero-Day Attack</h4><p>Exploits a vulnerability the vendor doesn't know about yet — there are "zero days" of patch protection available.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>Denial-of-Service (DoS)</h4><p>Floods a system or network with traffic/requests so legitimate users can't access it. Distributed (DDoS) uses many sources at once.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>Cross-Site Scripting (XSS)</h4><p>Injects malicious script into a trusted website so it runs in other users' browsers — often used to steal session cookies.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>SQL Injection</h4><p>Malicious SQL is inserted into an input field to manipulate or extract data from a backend database.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>Brute Force Attack</h4><p>Systematically tries every possible password or key combination until the correct one is found.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>Man-in-the-Middle (MITM)</h4><p>The attacker secretly sits between two parties, intercepting or altering communication that both sides believe is direct.</p></div>
-            <div class="term-card"><h4><span class="term-cat-dot cat-technique"></span>Man-in-the-Browser (MITB)</h4><p>A MITM variant where malware infects the browser itself to alter transactions — commonly used against online banking.</p></div>
-          </div>
-
-          <h4 style="margin:32px 0 4px; font-size:15px;">Human-Based</h4>
-          <div class="term-grid">
-            <div class="term-card w-full"><h4><span class="term-cat-dot cat-human"></span>Social Engineering</h4><p>Manipulating people, not technology — phishing, pretexting, baiting, and tailgating all exploit trust and psychology rather than a technical flaw.</p></div>
-          </div>
-
-          <p class="flip-hint">Tap a card to flip it and quiz yourself — cover the definitions above first.</p>
-          <div class="flip-grid" id="flipGrid1">
-            <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Worm</div><div class="flip-card-back">Self-replicating malware that spreads across a network with no user action needed.</div></div></div>
-            <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Rootkit</div><div class="flip-card-back">Hides privileged access at a deep OS level to avoid detection.</div></div></div>
-            <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Zero-Day</div><div class="flip-card-back">Exploits a flaw before the vendor has released a patch.</div></div></div>
-            <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">XSS</div><div class="flip-card-back">Injecting a malicious script into a trusted site that runs in visitors' browsers.</div></div></div>
-            <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Logic Bomb</div><div class="flip-card-back">Dormant malicious code that triggers on a specific date or condition.</div></div></div>
-            <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">MITB</div><div class="flip-card-back">Malware inside the browser itself alters transactions — common in banking fraud.</div></div></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-1-5">
-          <div class="objective-header"><span class="objective-tag">1.5</span><h3>Identify Backup and Restore Types</h3></div>
-          <p>The most common exam trap: knowing which files get backed up on which day isn't enough — you need to know what a <em>restore</em> requires for each type.</p>
-
-          <div class="backup-timeline">
-            <div class="backup-day-heads"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span></div>
-            <div class="backup-row">
-              <div class="backup-row-label" style="color:var(--good)">Full</div>
-              <div class="backup-days">
-                <div class="backup-day full">ALL</div><div class="backup-day full">ALL</div><div class="backup-day full">ALL</div><div class="backup-day full">ALL</div><div class="backup-day full">ALL</div>
-              </div>
-            </div>
-            <div class="backup-row">
-              <div class="backup-row-label" style="color:var(--warn)">Incremental</div>
-              <div class="backup-days">
-                <div class="backup-day full">ALL</div><div class="backup-day partial">Δ Mon</div><div class="backup-day partial">Δ Tue</div><div class="backup-day partial">Δ Wed</div><div class="backup-day partial">Δ Thu</div>
-              </div>
-            </div>
-            <div class="backup-row">
-              <div class="backup-row-label" style="color:var(--d2)">Differential</div>
-              <div class="backup-days">
-                <div class="backup-day full">ALL</div><div class="backup-day partial">Δ Mon</div><div class="backup-day partial">Δ Mon-Tue</div><div class="backup-day partial">Δ Mon-Wed</div><div class="backup-day partial">Δ Mon-Thu</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="compare-grid compare-3">
-            <div class="compare-card accent-good">
-              <h4 style="color:var(--good)">Full</h4>
-              <p>Backs up everything, every time.</p>
-              <div class="verdict">Restore: 1 backup set. Slowest backup, fastest restore.</div>
-            </div>
-            <div class="compare-card">
-              <h4 style="color:var(--warn)">Incremental</h4>
-              <p>Backs up only what changed since the <strong>last backup</strong> (full or incremental).</p>
-              <div class="verdict">Restore: last full + every incremental since. Fastest backup, slowest restore.</div>
-            </div>
-            <div class="compare-card">
-              <h4 style="color:var(--d2)">Differential</h4>
-              <p>Backs up everything changed since the <strong>last full backup</strong>.</p>
-              <div class="verdict">Restore: last full + latest differential only. A middle ground.</div>
-            </div>
-          </div>
-          <div class="exam-tip">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5b942" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
-            <div><div class="exam-tip-label">Exam Tip</div><p>Incremental backups grow smaller each day but restoring takes longer (more sets to apply). Differential backups grow larger each day but restoring is quicker (only two sets needed).</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="domain" data-d="2" id="domain-2">
-        <div class="domain-header">
-          <span class="domain-num">02</span>
-          <h2>Operating System Security</h2>
-        </div>
-        <p class="domain-intro">How Windows and Linux protect the system itself — hardening, authentication, permissions, auditing, and encryption. This domain rewards knowing the exact Windows tool or feature name for each concept.</p>
-
-        <div class="objective" id="obj-2-1">
-          <div class="objective-header"><span class="objective-tag">2.1</span><h3>Identify Client and Server Protection</h3></div>
-          <p>All of these are ways to shrink the attack surface introduced in 1.1 — fewer running services and enforced settings mean fewer doors left open.</p>
-          <div class="term-grid">
-            <div class="term-card"><h4>Separation of Services</h4><p>Running each service (web, database, mail) on its own system so compromising one doesn't hand over the rest.</p></div>
-            <div class="term-card"><h4>Hardening</h4><p>Disabling unnecessary services, ports, and default accounts, and applying secure configurations to reduce what an attacker can target.</p></div>
-            <div class="term-card"><h4>Patch Management</h4><p>The formal process of testing and deploying updates so known vulnerabilities get closed quickly and consistently.</p></div>
-            <div class="term-card"><h4>Reducing the Attack Surface</h4><p>The overall goal of the items on this list: fewer exposed services, ports, and features to attack.</p></div>
-            <div class="term-card"><h4>Group Policy — gpupdate / gpresult</h4><p><code>gpupdate</code> forces an immediate refresh of Group Policy settings. <code>gpresult</code> shows which policies are actually being applied to a user or computer — the go-to troubleshooting command.</p></div>
-            <div class="term-card"><h4>Secure Dynamic DNS Updates</h4><p>Restricts DNS record updates to authenticated devices only, preventing an attacker from silently poisoning DNS entries.</p></div>
-            <div class="term-card"><h4>User Account Control (UAC)</h4><p>Prompts for permission or admin credentials before allowing any action that needs elevated privileges — even for admins logged in normally.</p></div>
-            <div class="term-card"><h4>Keeping OS &amp; Software Updated</h4><p>The single most effective defense against known exploits — most breaches abuse vulnerabilities that already had a patch available.</p></div>
-            <div class="term-card"><h4>Encrypting Offline Folders</h4><p>Protects cached copies of network files stored locally (e.g., on a laptop), so a lost or stolen device doesn't expose that cached data.</p></div>
-            <div class="term-card"><h4>Software Restriction Policies</h4><p>Controls which applications are allowed to run at all, using a whitelist (only approved apps run) or blacklist (specific apps are blocked) approach.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-2-2">
-          <div class="objective-header"><span class="objective-tag">2.2</span><h3>Configure User Authentication</h3></div>
-          <p>Authentication answers "are you who you say you are?" — these are the mechanisms and policies that enforce it.</p>
-          <div class="term-grid">
-            <div class="term-card"><h4>Multifactor Authentication (MFA)</h4><p>Requires two or more proof types: something you <em>know</em> (password), something you <em>have</em> (phone/token), something you <em>are</em> (fingerprint).</p></div>
-            <div class="term-card"><h4>Password Policies</h4><p>Enforced rules for complexity, minimum length, expiration, and history (so old passwords can't be immediately reused).</p></div>
-            <div class="term-card"><h4>Remote Access</h4><p>Securing connections (VPN, RDP) made from outside the physical network so authentication can't be bypassed off-site.</p></div>
-            <div class="term-card"><h4>Secondary Sign-On — Run As / sudo</h4><p>Performing an admin task without being fully logged in as admin. Windows: <code>Run As</code>. Linux/macOS: <code>sudo</code>. Both follow least privilege by keeping the daily account non-elevated.</p></div>
-            <div class="term-card"><h4>Domain vs. Local Accounts</h4><p>Domain accounts are centralized (e.g., Active Directory) and work across the network; local accounts exist only on one specific machine.</p></div>
-            <div class="term-card"><h4>Kerberos</h4><p>The default Windows domain authentication protocol — proves identity using time-limited tickets instead of ever sending a password across the network.</p></div>
-          </div>
-
-          <div class="diagram-box">
-            <svg viewBox="0 0 620 170" width="560">
-              <rect x="10" y="55" width="130" height="60" rx="10" fill="#1b2438" stroke="#263349"/>
-              <text x="75" y="90" text-anchor="middle" class="ring-label-strong">Client</text>
-
-              <rect x="245" y="35" width="150" height="100" rx="10" fill="#1b2438" stroke="#8b93f0"/>
-              <text x="320" y="78" text-anchor="middle" class="ring-label-strong" fill="#8b93f0">KDC</text>
-              <text x="320" y="95" text-anchor="middle" class="ring-label">Key Distribution</text>
-              <text x="320" y="109" text-anchor="middle" class="ring-label">Center</text>
-
-              <rect x="480" y="55" width="130" height="60" rx="10" fill="#1b2438" stroke="#263349"/>
-              <text x="545" y="90" text-anchor="middle" class="ring-label-strong">App Server</text>
-
-              <path d="M140,75 L245,60" stroke="#8996b0" stroke-width="1.4" fill="none" marker-end="url(#arrow)"/>
-              <path d="M245,95 L140,110" stroke="#8996b0" stroke-width="1.4" fill="none" marker-end="url(#arrow)"/>
-              <path d="M395,68 L480,80" stroke="#8996b0" stroke-width="1.4" fill="none" marker-end="url(#arrow)"/>
-              <path d="M480,100 L395,105" stroke="#8996b0" stroke-width="1.4" fill="none" marker-end="url(#arrow)"/>
-              <path d="M140,130 Q330,160 545,130" stroke="#3ecf9e" stroke-width="1.4" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowgreen)"/>
-              <text x="330" y="158" text-anchor="middle" class="ring-label" fill="#3ecf9e">password itself never travels this path</text>
-
-              <defs>
-                <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8996b0"/></marker>
-                <marker id="arrowgreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3ecf9e"/></marker>
-              </defs>
-            </svg>
-            <p class="diagram-caption">1. Client logs in → KDC issues a <strong>Ticket-Granting Ticket (TGT)</strong>.  2. Client presents the TGT back to the KDC to request access → KDC issues a <strong>Service Ticket</strong>.  3. Client presents the Service Ticket to the App Server → access is granted, with the password never crossing the network.</p>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-2-3">
-          <div class="objective-header"><span class="objective-tag">2.3</span><h3>Manage Permissions in Windows and Linux</h3></div>
-          <p>The move-vs-copy behavior below is one of the most frequently tested — and misremembered — facts on the whole exam.</p>
-          <div class="term-grid">
-            <div class="term-card"><h4>File &amp; Folder Permissions</h4><p>Windows NTFS uses Read, Write, Modify, and Full Control; Linux uses read/write/execute (rwx) for owner, group, and others.</p></div>
-            <div class="term-card"><h4>Share Permissions</h4><p>Apply only when a folder is accessed over the network. When share and NTFS permissions conflict, the <strong>most restrictive</strong> of the two always wins.</p></div>
-            <div class="term-card"><h4>Inheritance</h4><p>Subfolders and files automatically pick up the permissions of their parent folder unless inheritance is explicitly broken.</p></div>
-            <div class="term-card"><h4>Take Ownership</h4><p>A special permission letting an admin become the owner of a file/folder, granting full control regardless of the previous permissions — used to regain access to "orphaned" data.</p></div>
-            <div class="term-card"><h4>Multiple Groups, Different Permissions</h4><p>NTFS permissions from different groups are cumulative (the most permissive combination applies) — <strong>except</strong> an explicit Deny, which always overrides any Allow.</p></div>
-            <div class="term-card"><h4>Delegation</h4><p>Assigning specific administrative tasks (like resetting passwords for one OU) to a non-admin user, without granting them full admin rights.</p></div>
-          </div>
-
-          <div class="compare-grid compare-2">
-            <div class="compare-card">
-              <h4>Copy <span class="mono" style="color:var(--text-dim); font-size:12px;">(same or different disk)</span></h4>
-              <p>Always treated as a brand-new file.</p>
-              <div class="verdict">Result: inherits the <strong>destination</strong> folder's permissions.</div>
-            </div>
-            <div class="compare-card">
-              <h4>Move <span class="mono" style="color:var(--text-dim); font-size:12px;">(different disk/partition)</span></h4>
-              <p>Windows can't just relocate the pointer across partitions, so it's really a copy + delete.</p>
-              <div class="verdict">Result: inherits the <strong>destination</strong> folder's permissions.</div>
-            </div>
-            <div class="compare-card accent-good w-full">
-              <h4 style="color:var(--good)">Move <span class="mono" style="color:var(--text-dim); font-size:12px;">(same disk/partition) — the exception</span></h4>
-              <p>NTFS just updates where the file is pointed to; the file itself is never rewritten.</p>
-              <div class="verdict">Result: keeps its <strong>original</strong> permissions.</div>
-            </div>
-          </div>
-          <div class="exam-tip">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5b942" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
-            <div><div class="exam-tip-label">Exam Tip</div><p>Copy always inherits the destination. Move only keeps original permissions when staying on the <em>same</em> partition — moving across partitions behaves exactly like a copy.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-2-4">
-          <div class="objective-header"><span class="objective-tag">2.4</span><h3>Facilitate Non-Repudiation Using Audit Policies and Log Files</h3></div>
-          <p>Auditing is what actually delivers on the non-repudiation principle from 1.1 — you can't prove who did something if you never logged it.</p>
-          <div class="term-grid">
-            <div class="term-card"><h4>Types of Auditing</h4><p>Success auditing (logs when an action succeeds), failure auditing (logs when it's denied), or both together.</p></div>
-            <div class="term-card"><h4>What Can Be Audited</h4><p>Logon/logoff events, object (file/folder) access, policy changes, privilege use, and account management actions.</p></div>
-            <div class="term-card"><h4>Enabling Auditing</h4><p>Configured through Group Policy or Local Security Policy on Windows; via <code>auditd</code> on Linux.</p></div>
-            <div class="term-card"><h4>What to Audit for a Purpose</h4><p>Match the audit type to the goal — e.g., audit failed logons to catch brute-force attempts, audit object access to watch a sensitive file.</p></div>
-            <div class="term-card"><h4>Where to Save Audit Information</h4><p>Windows Security log (viewed in Event Viewer); Linux syslog; often forwarded to a centralized SIEM for correlation.</p></div>
-            <div class="term-card"><h4>Reviewing Log Files</h4><p>Logs only have value if someone actually reviews them regularly to catch anomalies before they become incidents.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-2-5">
-          <div class="objective-header"><span class="objective-tag">2.5</span><h3>Demonstrate Knowledge of Encryption</h3></div>
-          <p>Encryption protects confidentiality (from the CIA triad) by making data unreadable without the correct key.</p>
-
-          <div class="diagram-box">
-            <svg viewBox="0 0 600 190" width="560">
-              <rect x="10" y="65" width="110" height="55" rx="10" fill="#1b2438" stroke="#263349"/>
-              <text x="65" y="97" text-anchor="middle" class="ring-label-strong">Sender</text>
-
-              <path d="M120,92 L230,92" stroke="#8996b0" stroke-width="1.4" marker-end="url(#arrow2)"/>
-              <circle cx="175" cy="70" r="16" fill="none" stroke="#ef5350" stroke-width="1.6"/>
-              <rect x="167" y="66" width="16" height="12" rx="2" fill="none" stroke="#ef5350" stroke-width="1.6"/>
-              <text x="175" y="42" text-anchor="middle" class="ring-label" fill="#ef5350">recipient's PUBLIC key</text>
-              <text x="175" y="55" text-anchor="middle" class="ring-label" fill="#ef5350">(encrypts)</text>
-
-              <rect x="230" y="70" width="130" height="44" rx="8" fill="#141b2d" stroke="#3ecf9e" stroke-dasharray="3 3"/>
-              <text x="295" y="97" text-anchor="middle" class="ring-label-strong" fill="#3ecf9e" style="font-size:11px">unreadable ciphertext</text>
-
-              <path d="M360,92 L470,92" stroke="#8996b0" stroke-width="1.4" marker-end="url(#arrow2)"/>
-              <circle cx="415" cy="70" r="16" fill="none" stroke="#8b93f0" stroke-width="1.6"/>
-              <rect x="407" y="66" width="16" height="12" rx="2" fill="none" stroke="#8b93f0" stroke-width="1.6"/>
-              <text x="415" y="42" text-anchor="middle" class="ring-label" fill="#8b93f0">recipient's PRIVATE key</text>
-              <text x="415" y="55" text-anchor="middle" class="ring-label" fill="#8b93f0">(decrypts)</text>
-
-              <rect x="480" y="65" width="110" height="55" rx="10" fill="#1b2438" stroke="#263349"/>
-              <text x="535" y="97" text-anchor="middle" class="ring-label-strong">Recipient</text>
-
-              <defs><marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8996b0"/></marker></defs>
-            </svg>
-            <p class="diagram-caption">Asymmetric (public/private key) encryption: anyone can encrypt with the recipient's <strong>public</strong> key, but only the matching <strong>private</strong> key — held only by the recipient — can decrypt it.</p>
-          </div>
-
-          <div class="term-grid">
-            <div class="term-card"><h4>File &amp; Folder Encryption (EFS)</h4><p>Encrypts individual files/folders tied to a specific user's certificate — other users, even admins, can't open them without that certificate.</p></div>
-            <div class="term-card"><h4>Encryption &amp; Moving/Copying Files</h4><p>Behaves like the permissions rules in 2.3 — copying an encrypted file to a location that doesn't support encryption (like a FAT32 drive) can silently decrypt it.</p></div>
-            <div class="term-card"><h4>Drive Encryption</h4><p>Encrypts an entire volume rather than individual files — protects all data on the disk even if the drive is removed and read elsewhere.</p></div>
-            <div class="term-card"><h4>TPM (Trusted Platform Module)</h4><p>A dedicated hardware chip that securely generates and stores encryption keys, tying full-disk encryption to the specific physical machine.</p></div>
-            <div class="term-card"><h4>Secure Communication (Email, Text, Chat, Social Media)</h4><p>Encrypting the content of messages in transit — e.g., PGP/S-MIME for email, end-to-end encryption for chat apps.</p></div>
-            <div class="term-card"><h4>VPN Encryption Methods</h4><p>Protocols like IPsec or SSL/TLS create an encrypted tunnel so traffic crossing a public network stays private.</p></div>
-            <div class="term-card"><h4>Certificate Properties &amp; Services</h4><p>A digital certificate binds a public key to an identity and is signed by a trusted Certificate Authority (CA) — it carries an issuer, subject, validity period, and public key.</p></div>
-            <div class="term-card"><h4>BitLocker</h4><p>Windows' built-in full-disk encryption feature, most securely paired with a TPM chip to store its keys.</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="domain" data-d="3" id="domain-3">
-        <div class="domain-header">
-          <span class="domain-num">03</span>
-          <h2>Network Device Security</h2>
-        </div>
-        <p class="domain-intro">The hardware and architecture layer — wireless protection, the devices that stand guard on a network, how networks get isolated from each other, and the protocols/ports every question on this domain assumes you already know cold.</p>
-
-        <div class="objective" id="obj-3-1">
-          <div class="objective-header"><span class="objective-tag">3.1</span><h3>Implement Wireless Security</h3></div>
-          <p>Wireless encryption standards only ever get stronger over time — if a question asks which is "most secure," it's always the newest one listed.</p>
-
-          <div class="diagram-box">
-            <svg viewBox="0 0 560 130" width="520">
-              <text x="0" y="18" class="ring-label" fill="#8996b0">weaker</text>
-              <text x="540" y="18" text-anchor="end" class="ring-label" fill="#3ecf9e">stronger</text>
-              <rect x="0" y="30" width="110" height="26" rx="4" fill="rgba(239,83,80,0.25)"/>
-              <text x="55" y="47" text-anchor="middle" class="ring-label-strong" style="font-size:12px">WEP</text>
-              <rect x="120" y="30" width="150" height="26" rx="4" fill="rgba(245,185,66,0.25)"/>
-              <text x="195" y="47" text-anchor="middle" class="ring-label-strong" style="font-size:12px">WPA</text>
-              <rect x="280" y="30" width="190" height="26" rx="4" fill="rgba(139,147,240,0.3)"/>
-              <text x="375" y="47" text-anchor="middle" class="ring-label-strong" style="font-size:12px">WPA2 (AES)</text>
-              <rect x="480" y="30" width="80" height="26" rx="4" fill="rgba(62,207,158,0.35)"/>
-              <text x="520" y="47" text-anchor="middle" class="ring-label-strong" style="font-size:11px">WPA3</text>
-
-              <text x="55" y="75" text-anchor="middle" class="ring-label" style="font-size:10.5px">easily cracked, deprecated</text>
-              <text x="195" y="75" text-anchor="middle" class="ring-label" style="font-size:10.5px">TKIP, stopgap fix</text>
-              <text x="375" y="75" text-anchor="middle" class="ring-label" style="font-size:10.5px">AES encryption, long-time standard</text>
-              <text x="520" y="75" text-anchor="middle" class="ring-label" style="font-size:10.5px">SAE, blocks offline guessing</text>
-            </svg>
-            <p class="diagram-caption">Wireless security types, weakest to strongest. WPA3's SAE handshake specifically defeats offline dictionary attacks that worked against WPA2.</p>
-          </div>
-
-          <div class="term-grid">
-            <div class="term-card"><h4>SSID</h4><p>The broadcast name of a wireless network. Hiding it isn't real security — it's still discoverable with basic tools.</p></div>
-            <div class="term-card"><h4>MAC Filtering</h4><p>Allows only listed device hardware addresses to connect — weak on its own since MAC addresses can be spoofed.</p></div>
-            <div class="term-card w-full"><h4>Default Configuration (OOBE — Out-of-Box Experience)</h4><p>The factory settings a device ships with, including default admin passwords. These are publicly documented, so changing them immediately on setup is a baseline security step.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-3-2">
-          <div class="objective-header"><span class="objective-tag">3.2</span><h3>Identify the Role of Network Protection Devices</h3></div>
-          <p>A firewall's core purpose is to filter traffic between a trusted and untrusted network based on a defined rule set — everything below is a variation on that job.</p>
-
-          <div class="term-grid">
-            <div class="term-card"><h4>Hardware vs. Software Firewall</h4><p>Hardware: a dedicated appliance protecting an entire network. Software: runs on one host/OS, protecting just that device.</p></div>
-            <div class="term-card"><h4>Network vs. Host Firewall</h4><p>Network firewall guards a whole network segment at the perimeter; host-based firewall guards a single device.</p></div>
-            <div class="term-card"><h4>Security Baselines</h4><p>A defined, documented minimum set of security settings used as the benchmark systems are measured/audited against.</p></div>
-            <div class="term-card"><h4>Content Filtering</h4><p>Blocks access to specific content categories (e.g., social media, gambling) based on organizational policy.</p></div>
-          </div>
-
-          <div class="compare-grid compare-2">
-            <div class="compare-card">
-              <h4>Stateless Inspection</h4>
-              <p>Examines each packet in isolation against static rules — fast, but has no memory of the larger conversation.</p>
-            </div>
-            <div class="compare-card accent-good">
-              <h4 style="color:var(--good)">Stateful Inspection</h4>
-              <p>Tracks the full context of active connections, so it understands whether traffic belongs to an already-established, legitimate session.</p>
-            </div>
-          </div>
-
-          <div class="compare-grid compare-2">
-            <div class="compare-card">
-              <h4>IDS <span class="mono" style="font-size:11px; color:var(--text-dim)">Intrusion Detection System</span></h4>
-              <p>Monitors traffic, <strong>detects</strong> malicious activity, and sends an alert. Passive — it doesn't touch the traffic itself.</p>
-            </div>
-            <div class="compare-card accent-good">
-              <h4 style="color:var(--good)">IPS <span class="mono" style="font-size:11px; color:var(--text-dim)">Intrusion Prevention System</span></h4>
-              <p>Sits inline with traffic and can <strong>actively block</strong> a detected threat in real time, not just alert on it.</p>
-            </div>
-          </div>
-
-          <div class="term-grid">
-            <div class="term-card"><h4>SIEM</h4><p>Security Information and Event Manager — aggregates and correlates log/event data from across the whole environment for centralized monitoring and alerting.</p></div>
-            <div class="term-card"><h4>Blacklisting vs. Whitelisting</h4><p>Blacklisting blocks specific listed items and allows everything else. Whitelisting allows only listed items and blocks everything else — more restrictive and generally more secure.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-3-3">
-          <div class="objective-header"><span class="objective-tag">3.3</span><h3>Identify Network Isolation Methods</h3></div>
-          <p>Each method below separates traffic or networks from each other for a different reason — know the reason, not just the acronym.</p>
-
-          <div class="diagram-box">
-            <svg viewBox="0 0 640 190" width="600">
-              <text x="45" y="30" text-anchor="middle" class="ring-label-strong">Internet</text>
-              <path d="M20,50 h50 M45,50 v90" stroke="none"/>
-              <circle cx="45" cy="95" r="26" fill="none" stroke="#8996b0" stroke-width="1.4"/>
-              <text x="45" y="99" text-anchor="middle" class="ring-label" style="font-size:16px">🌐</text>
-
-              <path d="M75,95 L155,95" stroke="#8996b0" stroke-width="1.4" marker-end="url(#arrow3)"/>
-              <rect x="155" y="60" width="18" height="70" fill="#ef5350" opacity="0.85"/>
-              <text x="164" y="145" text-anchor="middle" class="ring-label" fill="#ef5350" style="font-size:10.5px">Firewall</text>
-
-              <rect x="200" y="45" width="180" height="100" rx="10" fill="rgba(245,185,66,0.08)" stroke="#f5b942" stroke-dasharray="4 3"/>
-              <text x="290" y="35" text-anchor="middle" class="ring-label-strong" fill="#f5b942">DMZ</text>
-              <rect x="220" y="80" width="60" height="34" rx="6" fill="#1b2438" stroke="#263349"/>
-              <text x="250" y="101" text-anchor="middle" class="ring-label" style="font-size:10px">Web Server</text>
-              <rect x="295" y="80" width="65" height="34" rx="6" fill="#1b2438" stroke="#263349"/>
-              <text x="327" y="101" text-anchor="middle" class="ring-label" style="font-size:10px">Mail Server</text>
-
-              <path d="M380,95 L460,95" stroke="#8996b0" stroke-width="1.4" marker-end="url(#arrow3)"/>
-              <rect x="460" y="60" width="18" height="70" fill="#ef5350" opacity="0.85"/>
-              <text x="469" y="145" text-anchor="middle" class="ring-label" fill="#ef5350" style="font-size:10.5px">Firewall</text>
-
-              <rect x="500" y="55" width="120" height="80" rx="10" fill="rgba(62,207,158,0.08)" stroke="#3ecf9e"/>
-              <text x="560" y="45" text-anchor="middle" class="ring-label-strong" fill="#3ecf9e">Internal Network</text>
-              <text x="560" y="100" text-anchor="middle" class="ring-label" style="font-size:16px">🖥️</text>
-
-              <defs><marker id="arrow3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8996b0"/></marker></defs>
-            </svg>
-            <p class="diagram-caption">A DMZ (perimeter network) sits between two firewalls, hosting public-facing servers so the internet never touches the internal network directly.</p>
-          </div>
-
-          <div class="term-grid">
-            <div class="term-card"><h4>Routing</h4><p>Directing traffic between different networks or subnets using routers, based on destination address.</p></div>
-            <div class="term-card"><h4>Honeynet</h4><p>A decoy network built to attract attackers, letting defenders study attack techniques while diverting attention from real assets.</p></div>
-            <div class="term-card"><h4>NAT / PAT</h4><p>NAT translates private IPs to a public one for internet access. PAT lets many internal devices share one public IP by assigning each a different port.</p></div>
-            <div class="term-card"><h4>VPN &amp; IPsec</h4><p>A VPN builds an encrypted tunnel over a public network; IPsec is a protocol suite that authenticates and encrypts each packet, commonly powering that tunnel.</p></div>
-            <div class="term-card"><h4>Air Gap Network</h4><p>Physically isolated from any unsecured network, including the internet — the strongest possible form of isolation.</p></div>
-            <div class="term-card"><h4>DirectAccess</h4><p>A Microsoft feature giving domain-joined Windows clients seamless, always-on connectivity back to the corporate network without a traditional VPN client.</p></div>
-            <div class="term-card"><h4>VLAN</h4><p>Logically segments one physical network into multiple separate broadcast domains — better organization and security without extra hardware.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-3-4">
-          <div class="objective-header"><span class="objective-tag">3.4</span><h3>Identify Protocol Security Concepts</h3></div>
-          <div class="term-grid">
-            <div class="term-card"><h4>Tunneling</h4><p>Encapsulating one protocol's traffic inside another, often to move it securely across an untrusted network (the basis of most VPNs).</p></div>
-            <div class="term-card"><h4>DNSSEC</h4><p>Adds digital signatures to DNS responses so they can be validated as authentic, preventing DNS spoofing and cache poisoning.</p></div>
-            <div class="term-card w-full"><h4>Network Sniffing</h4><p>Capturing and inspecting traffic on a network — legitimate for troubleshooting (tools like Wireshark), but a serious threat when done by an attacker to steal unencrypted data.</p></div>
-          </div>
-
-          <table class="port-table">
-            <thead><tr><th>Port</th><th>Protocol</th><th>Purpose</th><th>Security</th></tr></thead>
-            <tbody>
-              <tr><td class="port-num">20 / 21</td><td>FTP</td><td>File transfer (data / control)</td><td><span class="sec-badge insecure">Insecure</span></td></tr>
-              <tr><td class="port-num">22</td><td>SSH</td><td>Encrypted remote command-line access</td><td><span class="sec-badge secure">Secure</span></td></tr>
-              <tr><td class="port-num">22</td><td>SFTP</td><td>File transfer over SSH</td><td><span class="sec-badge secure">Secure</span></td></tr>
-              <tr><td class="port-num">23</td><td>Telnet</td><td>Unencrypted remote command-line access</td><td><span class="sec-badge insecure">Insecure</span></td></tr>
-              <tr><td class="port-num">25</td><td>SMTP</td><td>Sending email between servers</td><td><span class="sec-badge neutral">Neutral</span></td></tr>
-              <tr><td class="port-num">53</td><td>DNS</td><td>Resolves domain names to IP addresses</td><td><span class="sec-badge neutral">Neutral</span></td></tr>
-              <tr><td class="port-num">80</td><td>HTTP</td><td>Unencrypted web traffic</td><td><span class="sec-badge insecure">Insecure</span></td></tr>
-              <tr><td class="port-num">143</td><td>IMAP</td><td>Retrieving email, messages stay on server</td><td><span class="sec-badge neutral">Neutral</span></td></tr>
-              <tr><td class="port-num">161</td><td>SNMP</td><td>Monitoring/managing network devices</td><td><span class="sec-badge insecure">Insecure</span></td></tr>
-              <tr><td class="port-num">389</td><td>LDAP</td><td>Directory service lookups (e.g., Active Directory)</td><td><span class="sec-badge insecure">Insecure</span></td></tr>
-              <tr><td class="port-num">443</td><td>HTTPS</td><td>Encrypted web traffic</td><td><span class="sec-badge secure">Secure</span></td></tr>
-              <tr><td class="port-num">636</td><td>LDAPS</td><td>Encrypted directory service lookups</td><td><span class="sec-badge secure">Secure</span></td></tr>
-              <tr><td class="port-num">3389</td><td>RDP</td><td>Remote Desktop Protocol (graphical remote access)</td><td><span class="sec-badge neutral">Neutral</span></td></tr>
-            </tbody>
-          </table>
-          <div class="exam-tip">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5b942" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
-            <div><div class="exam-tip-label">Exam Tip</div><p>Notice the pattern: Telnet → SSH, HTTP → HTTPS, FTP → SFTP, LDAP → LDAPS. Each insecure protocol has a secure, encrypted replacement — and the exam loves asking you to match them up.</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="domain" data-d="4" id="domain-4">
-        <div class="domain-header">
-          <span class="domain-num">04</span>
-          <h2>Secure Computing</h2>
-        </div>
-        <p class="domain-intro">The everyday-user layer: protecting email, browsers, and endpoints from the threats an average person actually encounters day to day.</p>
-
-        <div class="objective" id="obj-4-1">
-          <div class="objective-header"><span class="objective-tag">4.1</span><h3>Implement Email Protection</h3></div>
-          <p>Spoofing, phishing, and pharming get mixed up constantly — they overlap, but each names a different part of the attack.</p>
-
-          <div class="compare-grid compare-3">
-            <div class="compare-card">
-              <h4 style="color:var(--d1)">Spoofing</h4>
-              <p>Forging the "from" address so a message appears to come from a trusted source. A <em>technique</em>, not an attack goal on its own.</p>
-            </div>
-            <div class="compare-card">
-              <h4 style="color:var(--d2)">Phishing</h4>
-              <p>A fraudulent message — often using spoofing — that tricks the recipient into revealing sensitive info or installing malware, usually via a link.</p>
-            </div>
-            <div class="compare-card">
-              <h4 style="color:var(--d3)">Pharming</h4>
-              <p>Redirects a user to a fake website (often via DNS poisoning) even when they type the correct URL — no deceptive email required.</p>
-            </div>
-          </div>
-
-          <div class="term-grid">
-            <div class="term-card"><h4>Antispam</h4><p>Filters unsolicited bulk email before it reaches the inbox, reducing exposure to phishing and malware attachments.</p></div>
-            <div class="term-card"><h4>Client Protection</h4><p>Hardening the email client itself — attachment scanning, disabling auto-preview of risky content, blocking external images by default.</p></div>
-            <div class="term-card w-full"><h4>User Training</h4><p>The single most effective email defense: teaching people to recognize suspicious senders, mismatched links, and urgency-based pressure tactics before they click.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-4-2">
-          <div class="objective-header"><span class="objective-tag">4.2</span><h3>Manage Browser Security</h3></div>
-          <div class="term-grid">
-            <div class="term-card"><h4>Browser Settings</h4><p>Security zones, pop-up blockers, and script permissions that control what a visited site is allowed to do.</p></div>
-            <div class="term-card"><h4>Cache Management</h4><p>Clearing cached files and cookies protects privacy and removes any malicious content that may have been cached.</p></div>
-            <div class="term-card w-full"><h4>Private Browsing</h4><p>Prevents history, cookies, and cache from being saved locally after the session ends — but it does <strong>not</strong> hide activity from the network, ISP, or visited websites.</p></div>
-          </div>
-        </div>
-
-        <div class="objective" id="obj-4-3">
-          <div class="objective-header"><span class="objective-tag">4.3</span><h3>Install and Configure Anti-Malware and Antivirus Software</h3></div>
-          <div class="term-grid">
-            <div class="term-card"><h4>Installing / Uninstalling / Reinstalling</h4><p>Only one real-time AV engine should run at a time — conflicting engines can disable each other's protection.</p></div>
-            <div class="term-card"><h4>Updating</h4><p>Signature definitions need constant updates; a fully installed but outdated AV product can miss brand-new threats entirely.</p></div>
-            <div class="term-card"><h4>Remediation</h4><p>The process of removing detected malware and repairing whatever damage or changes it made to the system.</p></div>
-            <div class="term-card"><h4>Scheduling Scans</h4><p>Quick scans check common infection points fast; full scans check the entire system and should run on a regular schedule.</p></div>
-            <div class="term-card w-full"><h4>Investigating Alerts</h4><p>Every alert needs a judgment call — is it a true positive (real threat) or a false positive (legitimate file wrongly flagged) — before deciding how to act on it.</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="domain" style="margin-top:96px;">
-        <div class="domain-header" style="border-bottom:1px solid var(--border-soft);">
-          <h2 style="font-size:24px;">Final Exam-Readiness Checklist</h2>
-        </div>
-        <p class="domain-intro">All 17 objectives, one screen. Check off each one once you can explain it out loud without looking — that's the real test of readiness, not just recognizing it on this page.</p>
-
-        <div class="compare-grid compare-2" style="margin-top:24px;">
-          <div class="compare-card">
-            <h4 style="color:var(--d1)">01 · Defense in Depth</h4>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">1.1 Core security principles (CIA, threat/risk/vulnerability, least privilege, attack surface)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">1.2 Physical security (site, computer, removable media, mantraps)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">1.3 Security policy types (administrative vs. technical)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">1.4 All attack types (malware, techniques, social engineering)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">1.5 Backup types (full, incremental, differential)</label>
-          </div>
-          <div class="compare-card">
-            <h4 style="color:var(--d2)">02 · Operating System Security</h4>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">2.1 Client/server protection (hardening, patching, UAC, GPO)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">2.2 User authentication (MFA, Run As/sudo, Kerberos)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">2.3 Permissions (NTFS vs. share, move vs. copy rules)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">2.4 Auditing and log files</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">2.5 Encryption (EFS, BitLocker, TPM, public/private key)</label>
-          </div>
-          <div class="compare-card">
-            <h4 style="color:var(--d3)">03 · Network Device Security</h4>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">3.1 Wireless security (WEP/WPA/WPA2/WPA3, SSID, MAC filtering)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">3.2 Protection devices (firewalls, IDS/IPS, SIEM)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">3.3 Isolation methods (DMZ, NAT/PAT, VLAN, air gap)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">3.4 Protocols and well-known ports</label>
-          </div>
-          <div class="compare-card">
-            <h4 style="color:var(--d4)">04 · Secure Computing</h4>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">4.1 Email protection (spoofing vs. phishing vs. pharming)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">4.2 Browser security (cache, private browsing)</label>
-            <label style="display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--text-muted);"><input type="checkbox" style="margin-top:3px;">4.3 Anti-malware/antivirus lifecycle</label>
-          </div>
-        </div>
-      </section>
-
-      <footer class="site-footer">
-        <span>Network Security Study Guide · Built for ITS-102</span>
-        <span>Aligned to Certiport IT Specialist exam objectives · 4 domains, 17 objectives</span>
-      </footer>
-
-    </div>
-  </main>
-</div>
-
-<script>
-  // Mobile sidebar toggle
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  if(menuBtn){
-    menuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => sidebar.classList.remove('open'));
-    });
-  }
-
-  // Scroll-spy
-  const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-  const targets = navLinks.map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
-  const linkFor = id => navLinks.find(l => l.getAttribute('href') === '#' + id);
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const link = linkFor(entry.target.id);
-      if(!link) return;
-      if(entry.isIntersecting){
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
-
-  targets.forEach(t => observer.observe(t));
-
-  // Flip cards
-  document.addEventListener('click', (e) => {
-    const card = e.target.closest('.flip-card');
-    if(card) card.classList.toggle('flipped');
-  });
-</script>
-
-</body>
-</html>
+    <!-- JavaScript Dynamic Interactivity -->
+    <script>
+        // Set year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Filter Books logic
+        function filterBooks(category) {
+            const cards = document.querySelectorAll('.book-card');
+            const btns = document.querySelectorAll('.book-filter-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            event.currentTarget.classList.remove('bg-slate-800', 'text-slate-300');
+            event.currentTarget.classList.add('bg-brand-600', 'text-white');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.classList.contains(category)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Booking Modal Logic
+        function openBookingModal(serviceName) {
+            document.getElementById('selected-service-input').value = serviceName;
+            document.getElementById('booking-modal').classList.remove('hidden');
+            document.getElementById('booking-form').classList.remove('hidden');
+            document.getElementById('booking-success').classList.add('hidden');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function handleBookingSubmit(event) {
+            event.preventDefault();
+            document.getElementById('booking-form').classList.add('hidden');
+            document.getElementById('booking-success').classList.remove('hidden');
+            setTimeout(() => {
+                closeBookingModal();
+            }, 2500);
+        }
+
+        // Book Modal Logic
+        function openBookModal(title, description) {
+            document.getElementById('book-modal-title').textContent = title;
